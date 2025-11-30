@@ -1,0 +1,175 @@
+
+<header class="anasayfa-header">
+	<div class="brand">Benim Randevum</div>
+	<nav class="actions">
+		<a class="login-btn" routerLink="/login">Giriş Yap</a>
+	</nav>
+</header>
+
+<main class="anasayfa-main">
+  <section class="cards-container" [class.collapsed]="isSloganCollapsed">
+    <div class="card card-small">
+      <img src="assets/koufor.jpg" alt="Kuaför">
+      <div class="card-overlay">
+        <h3>Kuaför</h3>
+      </div>
+    </div>
+    <div class="card card-large">
+      <img src="assets/berber.png" alt="Berber">
+      <div class="card-overlay">
+        <h3>Berber</h3>
+      </div>
+    </div>
+    <div class="card card-small">
+      <img src="assets/oto.jpg" alt="Oto">
+      <div class="card-overlay">
+        <h3>Oto</h3>
+      </div>
+    </div>
+  </section>
+
+  <section class="slogan-section" [class.collapsed]="isSloganCollapsed">
+    <div class="slogan-content">
+      <span class="slogan-icon">📍</span>
+      <h2>Şehrinizdeki <span class="highlight">En İyi İşletmeleri</span> Bulun</h2>
+      <p>Binlerce işletme arasından size en uygun olanı keşfedin</p>
+    </div>
+    <button class="collapse-btn" (click)="toggleSlogan()">
+      <span class="collapse-icon">{{ isSloganCollapsed ? '▼' : '▲' }}</span>
+    </button>
+  </section>
+
+  <section class="search-section">
+    <div class="search-container">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="İşletme veya hizmet ara...">
+        <button class="search-btn">Ara</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- İşletmeler Listesi -->
+  <section class="isletmeler-section">
+    <div class="section-header">
+      <h2 class="section-title">Popüler İşletmeler</h2>
+      <p class="section-subtitle">Size en yakın ve en çok tercih edilen işletmeler</p>
+    </div>
+
+    <div class="isletmeler-grid" *ngIf="!yukleniyor">
+      <div class="isletme-card" *ngFor="let isletme of isletmeler">
+        <div class="isletme-img">
+          <img [src]="getFotoUrl(isletme)" [alt]="isletme.isim || isletme.ad">
+          <div class="isletme-badge">
+            <span class="badge-kategori" *ngIf="isletme.kategori">{{ isletme.kategori }}</span>
+            <span class="badge-puan" *ngIf="isletme.puan">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              {{ isletme.puan }}
+            </span>
+          </div>
+        </div>
+        <div class="isletme-body">
+          <div class="isletme-header">
+            <h3 class="isletme-ad">{{ isletme.isim || isletme.ad }}</h3>
+          </div>
+          <div class="isletme-details">
+            <div class="detail-item" *ngIf="isletme.adres">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>{{ isletme.adres }}</span>
+            </div>
+            <div class="detail-item" *ngIf="isletme.telefon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <span>{{ isletme.telefon }}</span>
+            </div>
+          </div>
+          <div class="isletme-actions">
+            <button class="btn-detay" (click)="detayGoster(isletme)">Detaylar</button>
+            <button class="btn-randevu" (click)="randevuAl(isletme)">Randevu Al</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="yukleniyor" *ngIf="yukleniyor">
+      <div class="loader"></div>
+      <span>Yükleniyor...</span>
+    </div>
+
+    <div class="bos-liste" *ngIf="!yukleniyor && isletmeler.length === 0">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <p>Henüz kayıtlı işletme bulunmuyor</p>
+    </div>
+  </section>
+</main>
+
+<!-- İşletme Detay Modal -->
+<div class="modal-overlay" *ngIf="modalAcik" (click)="modalKapat()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="modalKapat()">✕</button>
+
+    <div class="modal-body" *ngIf="seciliIsletme">
+      <!-- İşletme Fotoğrafı -->
+      <div class="modal-header-img">
+        <img [src]="getFotoUrl(seciliIsletme)" [alt]="seciliIsletme.isim || seciliIsletme.ad">
+      </div>
+
+      <!-- İşletme Bilgileri -->
+      <div class="modal-info">
+        <h2>{{ seciliIsletme.isim || seciliIsletme.ad }}</h2>
+
+        <div class="info-grid">
+          <div class="info-item" *ngIf="seciliIsletme.kategori">
+            <span class="info-label">Kategori</span>
+            <span class="info-value">{{ seciliIsletme.kategori }}</span>
+          </div>
+          <div class="info-item" *ngIf="seciliIsletme.telefon">
+            <span class="info-label">Telefon</span>
+            <span class="info-value">{{ seciliIsletme.telefon }}</span>
+          </div>
+          <div class="info-item" *ngIf="seciliIsletme.adres">
+            <span class="info-label">Adres</span>
+            <span class="info-value">{{ seciliIsletme.adres }}</span>
+          </div>
+          <div class="info-item" *ngIf="seciliIsletme.puan">
+            <span class="info-label">Puan</span>
+            <span class="info-value">⭐ {{ seciliIsletme.puan }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Çalışanlar -->
+      <div class="modal-calisanlar">
+        <h3>Çalışanlar</h3>
+        <div class="calisanlar-loading" *ngIf="calisanlarYukleniyor">
+          <span>Yükleniyor...</span>
+        </div>
+        <div class="calisanlar-list" *ngIf="!calisanlarYukleniyor">
+          <div class="calisan-item" *ngFor="let calisan of seciliIsletmeCalisanlar">
+            <div class="calisan-avatar">👤</div>
+            <div class="calisan-info">
+              <strong>{{ calisan.ad }} {{ calisan.soyad }}</strong>
+              <span>{{ calisan.baslangic_saati }} - {{ calisan.bitis_saati }}</span>
+            </div>
+          </div>
+          <p class="empty-calisanlar" *ngIf="seciliIsletmeCalisanlar.length === 0">Henüz çalışan eklenmemiş.</p>
+        </div>
+      </div>
+
+      <!-- Randevu Al Butonu -->
+      <div class="modal-actions">
+        <button class="btn-randevu-modal" (click)="randevuAl(seciliIsletme!)">Randevu Al</button>
+      </div>
+    </div>
+  </div>
+</div>
+

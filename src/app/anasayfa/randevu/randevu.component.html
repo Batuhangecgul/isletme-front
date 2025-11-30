@@ -1,0 +1,137 @@
+<div class="randevu-container">
+  <!-- Header -->
+  <div class="randevu-header">
+    <button class="back-btn" (click)="geriDon()"> Geri</button>
+    <h1>Randevu Al</h1>
+  </div>
+
+  <!-- İşletme Bilgisi -->
+  <div class="isletme-banner" *ngIf="isletme">
+    <h2>{{ isletme.isim || isletme.ad }}</h2>
+    <span class="kategori-badge" *ngIf="isletme.kategori">{{ isletme.kategori }}</span>
+  </div>
+
+  <!-- Yükleniyor -->
+  <div class="loading" *ngIf="yukleniyor">
+    <div class="spinner"></div>
+    <span>Yükleniyor...</span>
+  </div>
+
+  <div class="randevu-content" *ngIf="!yukleniyor">
+    <!-- ADIM 1: Çalışan Seçimi -->
+    <div class="section">
+      <div class="section-header">
+        <span class="step-number">1</span>
+        <h3>Çalışan Seçin</h3>
+      </div>
+
+      <div class="calisanlar-grid">
+        <div
+          class="calisan-card"
+          *ngFor="let calisan of calisanlar"
+          [class.selected]="seciliCalisan?.id === calisan.id"
+          (click)="calisanSec(calisan)">
+          <div class="calisan-avatar"></div>
+          <div class="calisan-info">
+            <strong>{{ calisan.ad }} {{ calisan.soyad }}</strong>
+            <span class="calisan-saat">{{ calisan.baslangic_saati }} - {{ calisan.bitis_saati }}</span>
+          </div>
+          <div class="check-icon" *ngIf="seciliCalisan?.id === calisan.id"></div>
+        </div>
+      </div>
+
+      <p class="empty-message" *ngIf="calisanlar.length === 0">
+        Bu işletmede henüz çalışan bulunmuyor.
+      </p>
+    </div>
+
+    <!-- ADIM 2: Tarih Seçimi -->
+    <div class="section" *ngIf="seciliCalisan">
+      <div class="section-header">
+        <span class="step-number">2</span>
+        <h3>Tarih Seçin</h3>
+      </div>
+
+      <div class="tarih-secimi">
+        <input
+          type="date"
+          [(ngModel)]="seciliTarih"
+          [min]="bugun"
+          [max]="maksimumTarih"
+          (change)="tarihDegisti()"
+          class="tarih-input">
+        <span class="tarih-info">En fazla 7 gün sonrasına randevu alabilirsiniz</span>
+      </div>
+    </div>
+
+    <!-- ADIM 3: Saat Seçimi (Slotlar) -->
+    <div class="section" *ngIf="seciliCalisan && seciliTarih">
+      <div class="section-header">
+        <span class="step-number">3</span>
+        <h3>Saat Seçin</h3>
+      </div>
+
+      <div class="slots-loading" *ngIf="slotlarYukleniyor">
+        <div class="spinner small"></div>
+        <span>Müsait saatler yükleniyor...</span>
+      </div>
+
+      <div class="slots-grid" *ngIf="!slotlarYukleniyor">
+        <div
+          class="slot-card"
+          *ngFor="let slot of slotlar"
+          [class.musait]="slot.durum === 'musait'"
+          [class.beklemede]="slot.durum === 'beklemede'"
+          [class.onaylandi]="slot.durum === 'onaylandi'"
+          [class.selected]="seciliSaat === slot.saat"
+          (click)="slotSec(slot)">
+          <span class="slot-saat">{{ slot.saat }}</span>
+          <span class="slot-durum musait" *ngIf="slot.durum === 'musait'">Müsait</span>
+          <span class="slot-durum beklemede" *ngIf="slot.durum === 'beklemede'">Beklemede</span>
+          <span class="slot-durum onaylandi" *ngIf="slot.durum === 'onaylandi'">Dolu</span>
+        </div>
+      </div>
+
+      <p class="empty-message" *ngIf="!slotlarYukleniyor && slotlar.length === 0">
+        Bu tarih için müsait saat bulunamadı.
+      </p>
+    </div>
+
+    <!-- Seçim Özeti & Onayla -->
+    <div class="section ozet" *ngIf="seciliCalisan && seciliTarih && seciliSaat && !randevuBasarili">
+      <div class="ozet-content">
+        <h3>Randevu Özeti</h3>
+        <div class="ozet-detay">
+          <div class="ozet-item">
+            <span class="label">Çalışan:</span>
+            <span class="value">{{ seciliCalisan.ad }} {{ seciliCalisan.soyad }}</span>
+          </div>
+          <div class="ozet-item">
+            <span class="label">Tarih:</span>
+            <span class="value">{{ seciliTarih }}</span>
+          </div>
+          <div class="ozet-item">
+            <span class="label">Saat:</span>
+            <span class="value">{{ seciliSaat }}</span>
+          </div>
+        </div>
+        <div class="telefon-input">
+          <label>Telefon Numaranız</label>
+          <input type="tel" [(ngModel)]="musteriTelefon" placeholder="05XX XXX XX XX" maxlength="11">
+        </div>
+        <div class="hata-mesaj" *ngIf="randevuHata">{{ randevuHata }}</div>
+      </div>
+      <button class="onayla-btn" (click)="randevuOlustur()" [disabled]="randevuYukleniyor">
+        {{ randevuYukleniyor ? 'Oluşturuluyor...' : 'Randevuyu Onayla' }}
+      </button>
+    </div>
+
+    <!-- Başarılı Mesajı -->
+    <div class="section basarili" *ngIf="randevuBasarili">
+      <div class="basarili-icon">✓</div>
+      <h3>Randevunuz Oluşturuldu!</h3>
+      <p>Randevunuz başarıyla oluşturuldu. İşletme onayından sonra randevunuz kesinleşecektir.</p>
+      <p class="redirect-info">Anasayfaya yönlendiriliyorsunuz...</p>
+    </div>
+  </div>
+</div>

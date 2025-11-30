@@ -1,0 +1,51 @@
+<div class="login-page">
+  <div class="main">
+    <input type="checkbox" id="chk" [checked]="!isLoginMode" (change)="toggleMode()" aria-hidden="true">
+
+    <div class="signup">
+      <form (ngSubmit)="onSignup()">
+        <label for="chk" aria-hidden="true">Kayıt Ol</label>
+        <input type="text" [(ngModel)]="signupName" name="name" placeholder="İşletme Adı *" required>
+        <input type="tel" [(ngModel)]="signupPhone" name="phone" placeholder="Telefon (isteğe bağlı)">
+        <input type="password" [(ngModel)]="signupPassword" name="password" placeholder="Şifre (min 6 karakter) *" required minlength="6">
+
+        <div class="message error" *ngIf="signupError">
+          <span class="icon">❌</span>
+          {{ signupError }}
+        </div>
+
+        <div class="message success" *ngIf="signupSuccess">
+          <span class="icon">✅</span>
+          {{ signupSuccess }}
+        </div>
+
+        <button type="submit" [disabled]="loading">
+          {{ loading ? 'Kayıt Yapılıyor...' : 'Kayıt Ol' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="login">
+      <form (ngSubmit)="onLogin()">
+        <label for="chk" aria-hidden="true">Giriş Yap</label>
+        <input type="tel" [(ngModel)]="loginTelefon" name="telefon" placeholder="Telefon" required>
+        <input type="password" [(ngModel)]="loginPassword" name="password" placeholder="Şifre" required>
+
+        <div class="message success" *ngIf="loginSuccess">
+          <span class="icon">✅</span>
+          {{ loginSuccess }}
+        </div>
+
+        <div class="message error" *ngIf="loginError">
+          <span class="icon">❌</span>
+          {{ loginError }}
+        </div>
+
+        <button type="submit" [disabled]="loading">
+          {{ loading ? 'Giriş Yapılıyor...' : 'Giriş Yap' }}
+        </button>
+      </form>
+      <a class="back-link" routerLink="/">← Anasayfaya Dön</a>
+    </div>
+  </div>
+</div>

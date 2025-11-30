@@ -1,0 +1,189 @@
+<div class="panel-container">
+  <div class="panel-header">
+    <h1>İşletme Paneli</h1>
+    <button class="logout-btn" (click)="logout()">Çıkış Yap</button>
+  </div>
+
+  <!-- Tab Menüsü -->
+  <div class="tab-menu">
+    <button [class.active]="aktifTab === 'genel'" (click)="aktifTab = 'genel'">Genel Bilgiler</button>
+    <button [class.active]="aktifTab === 'calisanlar'" (click)="aktifTab = 'calisanlar'">Çalışanlar</button>
+    <button [class.active]="aktifTab === 'randevular'" (click)="aktifTab = 'randevular'">Randevular</button>
+  </div>
+
+  <!-- GENEL BİLGİLER TAB -->
+  <div class="tab-content" *ngIf="aktifTab === 'genel'">
+    <ng-container *ngIf="isletme">
+      <!-- Görüntüleme Modu -->
+      <div class="isletme-info" *ngIf="!duzenlemeModu">
+        <div class="info-header">
+          <div class="foto-container">
+            <div class="isletme-foto" (click)="fotografSec()">
+              <img *ngIf="getFotoUrl()" [src]="getFotoUrl()" alt="İşletme Fotoğrafı">
+              <div *ngIf="!getFotoUrl()" class="foto-placeholder">
+                <span>📷</span>
+              </div>
+              <div class="foto-overlay">
+                <span>📷 Değiştir</span>
+              </div>
+            </div>
+            <input type="file" id="fotografInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+
+            <!-- Seçilen dosya bilgisi -->
+            <div class="selected-file" *ngIf="selectedFile">
+              <span>{{ selectedFile.name }}</span>
+              <button class="upload-btn" (click)="fotografGuncelle()" [disabled]="fotografYukleniyor">
+                {{ fotografYukleniyor ? 'Yükleniyor...' : '⬆️ Yükle' }}
+              </button>
+            </div>
+          </div>
+          <button class="edit-btn" (click)="duzenlemeyiBaslat()">✏️ Düzenle</button>
+        </div>
+        <h2>{{ isletme!.isim }}</h2>
+        <p><strong>ID:</strong> {{ isletmeId }}</p>
+        <p *ngIf="isletme!.telefon"><strong>Telefon:</strong> {{ isletme!.telefon }}</p>
+        <p *ngIf="isletme!.adres"><strong>Adres:</strong> {{ isletme!.adres }}</p>
+        <p *ngIf="isletme!.kategori"><strong>Kategori:</strong> {{ isletme!.kategori }}</p>
+      </div>
+
+      <!-- Düzenleme Modu -->
+      <div class="isletme-info edit-mode" *ngIf="duzenlemeModu">
+        <h3>İşletme Bilgilerini Düzenle</h3>
+
+        <div class="edit-form">
+          <div class="form-group">
+            <label>İşletme Adı</label>
+            <input type="text" [(ngModel)]="duzenlemeVerisi.isim" placeholder="İşletme Adı">
+          </div>
+
+          <div class="form-group">
+            <label>Telefon</label>
+            <input type="tel" [(ngModel)]="duzenlemeVerisi.telefon" placeholder="Telefon">
+          </div>
+
+          <div class="form-group">
+            <label>Adres</label>
+            <input type="text" [(ngModel)]="duzenlemeVerisi.adres" placeholder="Adres">
+          </div>
+
+          <div class="form-group">
+            <label>Kategori</label>
+            <select [(ngModel)]="duzenlemeVerisi.kategori">
+              <option value="">Seçiniz</option>
+              <option value="Berber">Berber</option>
+              <option value="Kuaför">Kuaför</option>
+              <option value="Güzellik Salonu">Güzellik Salonu</option>
+              <option value="Oto Yıkama">Oto Yıkama</option>
+              <option value="Diğer">Diğer</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Yeni Şifre (opsiyonel, min 6 karakter)</label>
+            <input type="password" [(ngModel)]="duzenlemeVerisi.parola" placeholder="Yeni şifre bırakın veya değiştirin">
+          </div>
+
+          <div class="form-actions">
+            <button class="cancel-btn" (click)="duzenlemeyiIptal()">İptal</button>
+            <button class="save-btn" (click)="isletmeyiGuncelle()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- ÇALIŞANLAR TAB -->
+  <div class="tab-content" *ngIf="aktifTab === 'calisanlar'">
+    <div class="section-header">
+      <h2>Çalışanlar</h2>
+      <button class="add-btn" (click)="calisanFormAcik = !calisanFormAcik">
+        {{ calisanFormAcik ? 'İptal' : '+ Çalışan Ekle' }}
+      </button>
+    </div>
+
+    <!-- Çalışan Ekleme Formu -->
+    <div class="form-card" *ngIf="calisanFormAcik">
+      <h3>Yeni Çalışan</h3>
+      <div class="form-row">
+        <input type="text" [(ngModel)]="yeniCalisan.ad" placeholder="Ad">
+        <input type="text" [(ngModel)]="yeniCalisan.soyad" placeholder="Soyad">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Başlangıç Saati</label>
+          <input type="time" [(ngModel)]="yeniCalisan.baslangic_saati">
+        </div>
+        <div class="form-group">
+          <label>Bitiş Saati</label>
+          <input type="time" [(ngModel)]="yeniCalisan.bitis_saati">
+        </div>
+      </div>
+      <button class="submit-btn" (click)="calisanEkle()">Kaydet</button>
+    </div>
+
+    <!-- Çalışan Listesi -->
+    <div class="list-container">
+      <div class="list-item" *ngFor="let calisan of calisanlar">
+        <div class="item-info">
+          <strong>{{ calisan.ad }} {{ calisan.soyad }}</strong>
+          <span class="item-detail">{{ calisan.baslangic_saati }} - {{ calisan.bitis_saati }}</span>
+        </div>
+      </div>
+      <p *ngIf="calisanlar.length === 0" class="empty-message">Henüz çalışan eklenmemiş.</p>
+    </div>
+  </div>
+
+  <!-- RANDEVULAR TAB -->
+  <div class="tab-content" *ngIf="aktifTab === 'randevular'">
+    <div class="section-header">
+      <h2>Randevular</h2>
+    </div>
+
+    <!-- Filtreler -->
+    <div class="filters">
+      <select [(ngModel)]="seciliDurum" (change)="randevulariYukle()">
+        <option value="">Tüm Durumlar</option>
+        <option value="beklemede">Beklemede</option>
+        <option value="onaylandi">Onaylandı</option>
+        <option value="iptal">İptal Edildi</option>
+      </select>
+      <input type="date" [(ngModel)]="seciliTarih" (change)="randevulariYukle()">
+      <button class="refresh-btn" (click)="randevulariYukle()">Yenile</button>
+    </div>
+
+    <!-- Randevu Listesi -->
+    <div class="list-container">
+      <div class="randevu-item" *ngFor="let randevu of randevular" [class.beklemede]="randevu.durum === 'beklemede'" [class.onaylandi]="randevu.durum === 'onaylandi'" [class.iptal]="randevu.durum === 'iptal'">
+        <div class="randevu-info">
+          <div class="randevu-main">
+            <strong>{{ formatRandevuTarih(randevu) }}</strong>
+            <span class="durum-badge" [class.beklemede]="randevu.durum === 'beklemede'" [class.onaylandi]="randevu.durum === 'onaylandi'" [class.iptal]="randevu.durum === 'iptal'">{{ randevu.durum }}</span>
+          </div>
+          <div class="randevu-details">
+            <span>📞 {{ randevu.telefon }}</span>
+            <span>👤 {{ getCalisanAdi(randevu.calisan_id) }}</span>
+          </div>
+        </div>
+        <div class="randevu-actions" *ngIf="randevu.durum === 'beklemede'">
+          <button class="approve-btn" (click)="randevuOnayla(randevu.id || randevu.randevu_id)">✓ Onayla</button>
+          <button class="reject-btn" (click)="randevuIptal(randevu.id || randevu.randevu_id)">✕ İptal</button>
+        </div>
+        <div class="randevu-actions" *ngIf="randevu.durum === 'iptal'">
+          <button class="approve-btn" (click)="randevuOnayla(randevu.id || randevu.randevu_id)">✓ Onayla</button>
+          <button class="pending-btn" (click)="randevuBeklemedeYap(randevu.id || randevu.randevu_id)">⏳ Beklemeye Al</button>
+          <button class="delete-btn" (click)="randevuSil(randevu.id || randevu.randevu_id)">🗑 Sil</button>
+        </div>
+        <div class="randevu-actions" *ngIf="randevu.durum === 'onaylandi'">
+          <button class="pending-btn" (click)="randevuBeklemedeYap(randevu.id || randevu.randevu_id)">⏳ Beklemeye Al</button>
+          <button class="reject-btn" (click)="randevuIptal(randevu.id || randevu.randevu_id)">✕ İptal</button>
+          <button class="delete-btn" (click)="randevuSil(randevu.id || randevu.randevu_id)">🗑 Sil</button>
+        </div>
+      </div>
+      <p *ngIf="randevular.length === 0" class="empty-message">Randevu bulunamadı.</p>
+    </div>
+  </div>
+
+  <div *ngIf="!isletme && aktifTab === 'genel'" class="no-data">
+    <p>İşletme bilgisi yükleniyor...</p>
+  </div>
+</div>
