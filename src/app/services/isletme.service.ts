@@ -34,6 +34,7 @@ export interface Randevu {
   isletme_id: number;
   calisan_id: number;
   telefon: string;
+  alan_kisi?: string;
   tarih?: string;
   saat?: string;
   baslangic_zamani?: string;

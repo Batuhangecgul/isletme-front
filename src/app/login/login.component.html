@@ -7,6 +7,12 @@
         <label for="chk" aria-hidden="true">Kayıt Ol</label>
         <input type="text" [(ngModel)]="signupName" name="name" placeholder="İşletme Adı *" required>
         <input type="tel" [(ngModel)]="signupPhone" name="phone" placeholder="Telefon (isteğe bağlı)">
+        <div class="address-group">
+          <input type="text" [(ngModel)]="signupIl" name="il" placeholder="İl *" required>
+          <input type="text" [(ngModel)]="signupIlce" name="ilce" placeholder="İlçe *" required>
+          <input type="text" [(ngModel)]="signupMahalle" name="mahalle" placeholder="Mahalle *" required>
+          <input type="text" [(ngModel)]="signupSokak" name="sokak" placeholder="Sokak *" required>
+        </div>
         <input type="password" [(ngModel)]="signupPassword" name="password" placeholder="Şifre (min 6 karakter) *" required minlength="6">
 
         <div class="message error" *ngIf="signupError">

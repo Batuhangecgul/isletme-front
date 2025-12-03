@@ -12,7 +12,7 @@
 }
 
 .main {
-	width: 350px;
+	width: 320px;
 	height: 500px;
 	overflow: hidden;
 	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
@@ -35,7 +35,7 @@
 	font-size: 2.3em;
 	justify-content: center;
 	display: flex;
-	margin: 50px;
+	margin: 30px 50px;
 	font-weight: bold;
 	cursor: pointer;
 	transition: .5s ease-in-out;
@@ -44,18 +44,20 @@
 .main input[type="text"],
 .main input[type="email"],
 .main input[type="tel"],
-.main input[type="password"] {
-	width: 60%;
-	height: 10px;
+.main input[type="password"],
+.main input[type="number"] {
+	width: 70%;
+	height: 12px;
 	background: #e0dede;
 	justify-content: center;
 	display: flex;
-	margin: 20px auto;
+	margin: 10px auto;
 	padding: 12px;
 	border: none;
 	outline: none;
-	border-radius: 5px;
+	border-radius: 8px;
 	font-size: 14px;
+	box-sizing: border-box;
 }
 
 .main input::placeholder {
@@ -63,19 +65,18 @@
 }
 
 .main button {
-	width: 60%;
-	height: 40px;
-	margin: 10px auto;
+	width: 70%;
+	height: 44px;
+	margin: 15px auto;
 	justify-content: center;
 	display: block;
 	color: #fff;
 	background: #573b8a;
 	font-size: 1em;
 	font-weight: bold;
-	margin-top: 30px;
 	outline: none;
 	border: none;
-	border-radius: 5px;
+	border-radius: 8px;
 	transition: .2s ease-in;
 	cursor: pointer;
 }
@@ -90,10 +91,10 @@
 }
 
 .login {
-	height: 460px;
+	height: 400px;
 	background: #eee;
 	border-radius: 60% / 10%;
-	transform: translateY(-180px);
+	transform: translateY(-100px);
 	transition: .8s ease-in-out;
 }
 
@@ -103,7 +104,7 @@
 }
 
 #chk:checked ~ .login {
-	transform: translateY(-500px);
+	transform: translateY(-460px);
 }
 
 #chk:checked ~ .login label {

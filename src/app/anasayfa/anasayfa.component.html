@@ -43,8 +43,8 @@
     <div class="search-container">
       <div class="search-box">
         <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" placeholder="İşletme veya hizmet ara...">
-        <button class="search-btn">Ara</button>
+        <input type="text" class="search-input" placeholder="İşletme veya hizmet ara..." [(ngModel)]="aramaMetni" (keyup.enter)="ara()">
+        <button class="search-btn" (click)="ara()">Ara</button>
       </div>
     </div>
   </section>
@@ -52,12 +52,13 @@
   <!-- İşletmeler Listesi -->
   <section class="isletmeler-section">
     <div class="section-header">
-      <h2 class="section-title">Popüler İşletmeler</h2>
-      <p class="section-subtitle">Size en yakın ve en çok tercih edilen işletmeler</p>
+      <h2 class="section-title">{{ aramaMetni ? 'Arama Sonuçları' : 'Popüler İşletmeler' }}</h2>
+      <p class="section-subtitle" *ngIf="!aramaMetni">Size en yakın ve en çok tercih edilen işletmeler</p>
+      <p class="section-subtitle" *ngIf="aramaMetni">"{{ aramaMetni }}" için {{ filtrelenmisIsletmeler.length }} sonuç bulundu</p>
     </div>
 
     <div class="isletmeler-grid" *ngIf="!yukleniyor">
-      <div class="isletme-card" *ngFor="let isletme of isletmeler">
+      <div class="isletme-card" *ngFor="let isletme of filtrelenmisIsletmeler">
         <div class="isletme-img">
           <img [src]="getFotoUrl(isletme)" [alt]="isletme.isim || isletme.ad">
           <div class="isletme-badge">

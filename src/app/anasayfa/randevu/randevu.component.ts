@@ -195,13 +195,14 @@ export class RandevuComponent implements OnInit {
   }
 
   // Randevu oluşturma
+  musteriAdi: string = '';
   musteriTelefon: string = '';
   randevuYukleniyor = false;
   randevuBasarili = false;
   randevuHata = '';
 
   randevuOlustur(): void {
-    if (!this.seciliCalisan || !this.seciliTarih || !this.seciliSaat || !this.musteriTelefon || !this.isletmeId) {
+    if (!this.seciliCalisan || !this.seciliTarih || !this.seciliSaat || !this.musteriTelefon || !this.musteriAdi || !this.isletmeId) {
       this.randevuHata = 'Lütfen tüm alanları doldurun';
       return;
     }
@@ -230,7 +231,8 @@ export class RandevuComponent implements OnInit {
       calisan_id: calisanId,
       baslangic_zamani: baslangicZamani,
       bitis_zamani: bitisZamani,
-      telefon: this.musteriTelefon
+      telefon: this.musteriTelefon,
+      alan_kisi: this.musteriAdi
     };
 
     console.log('Randevu verileri:', randevuData);

@@ -11,8 +11,10 @@ export class AnasayfaComponent implements OnInit {
 
   isSloganCollapsed = false;
   isletmeler: Isletme[] = [];
+  filtrelenmisIsletmeler: Isletme[] = [];
   yukleniyor = true;
   storageUrl = 'http://127.0.0.1:8000/storage/';
+  aramaMetni = '';
 
   // Modal
   modalAcik = false;
@@ -44,6 +46,7 @@ export class AnasayfaComponent implements OnInit {
           this.isletmeler = Object.values(data);
         }
         console.log('İşletmeler:', this.isletmeler);
+        this.filtrelenmisIsletmeler = this.isletmeler;
         this.yukleniyor = false;
       },
       error: (err) => {
@@ -62,6 +65,20 @@ export class AnasayfaComponent implements OnInit {
 
   toggleSlogan(): void {
     this.isSloganCollapsed = !this.isSloganCollapsed;
+  }
+
+  ara(): void {
+    const metin = this.aramaMetni.toLowerCase().trim();
+    if (!metin) {
+      this.filtrelenmisIsletmeler = this.isletmeler;
+      return;
+    }
+    this.filtrelenmisIsletmeler = this.isletmeler.filter(isletme => {
+      const isim = (isletme.isim || isletme.ad || '').toLowerCase();
+      const kategori = (isletme.kategori || '').toLowerCase();
+      const adres = (isletme.adres || '').toLowerCase();
+      return isim.includes(metin) || kategori.includes(metin) || adres.includes(metin);
+    });
   }
 
   // Modal işlemleri

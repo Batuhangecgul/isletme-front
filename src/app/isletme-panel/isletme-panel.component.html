@@ -44,6 +44,7 @@
         <p *ngIf="isletme!.telefon"><strong>Telefon:</strong> {{ isletme!.telefon }}</p>
         <p *ngIf="isletme!.adres"><strong>Adres:</strong> {{ isletme!.adres }}</p>
         <p *ngIf="isletme!.kategori"><strong>Kategori:</strong> {{ isletme!.kategori }}</p>
+        <p *ngIf="isletme!.zaman_artisi"><strong>Zaman Artışı:</strong> {{ isletme!.zaman_artisi }} dakika</p>
       </div>
 
       <!-- Düzenleme Modu -->
@@ -76,6 +77,11 @@
               <option value="Oto Yıkama">Oto Yıkama</option>
               <option value="Diğer">Diğer</option>
             </select>
+          </div>
+
+          <div class="form-group">
+            <label>Zaman Artış Miktarı (dakika)</label>
+            <input type="number" [(ngModel)]="duzenlemeVerisi.zaman_artisi" placeholder="Örn: 30" min="5" max="240">
           </div>
 
           <div class="form-group">
@@ -153,15 +159,21 @@
 
     <!-- Randevu Listesi -->
     <div class="list-container">
-      <div class="randevu-item" *ngFor="let randevu of randevular" [class.beklemede]="randevu.durum === 'beklemede'" [class.onaylandi]="randevu.durum === 'onaylandi'" [class.iptal]="randevu.durum === 'iptal'">
+      <div class="randevu-item" *ngFor="let randevu of randevular"
+           [class.beklemede]="randevu.durum === 'beklemede' && !randevuGecmisMi(randevu)"
+           [class.onaylandi]="randevu.durum === 'onaylandi' && !randevuGecmisMi(randevu)"
+           [class.iptal]="randevu.durum === 'iptal'"
+           [class.gecmis]="randevuGecmisMi(randevu)">
         <div class="randevu-info">
           <div class="randevu-main">
             <strong>{{ formatRandevuTarih(randevu) }}</strong>
-            <span class="durum-badge" [class.beklemede]="randevu.durum === 'beklemede'" [class.onaylandi]="randevu.durum === 'onaylandi'" [class.iptal]="randevu.durum === 'iptal'">{{ randevu.durum }}</span>
+            <span class="durum-badge gecmis" *ngIf="randevuGecmisMi(randevu)">⏰ Geçmiş</span>
+            <span class="durum-badge" *ngIf="!randevuGecmisMi(randevu)" [class.beklemede]="randevu.durum === 'beklemede'" [class.onaylandi]="randevu.durum === 'onaylandi'" [class.iptal]="randevu.durum === 'iptal'">{{ randevu.durum }}</span>
           </div>
           <div class="randevu-details">
+            <span *ngIf="randevu.alan_kisi">🧑 {{ randevu.alan_kisi }}</span>
             <span>📞 {{ randevu.telefon }}</span>
-            <span>👤 {{ getCalisanAdi(randevu.calisan_id) }}</span>
+            <span>👤 {{ randevu.calisan ? (randevu.calisan.ad + ' ' + randevu.calisan.soyad) : getCalisanAdi(randevu.calisan_id) }}</span>
           </div>
         </div>
         <div class="randevu-actions" *ngIf="randevu.durum === 'beklemede'">

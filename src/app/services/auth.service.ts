@@ -13,6 +13,7 @@ export interface Isletme {
   puan?: number;
   resim?: string;
   fotograf?: string;
+  zaman_artisi?: number;
 }
 
 export interface LoginResponse {
@@ -24,7 +25,12 @@ export interface SignupRequest {
   isim: string;
   parola: string;
   telefon?: string;
-  adres?: string;
+  adres?: {
+    il?: string;
+    ilce?: string;
+    mahalle?: string;
+    sokak?: string;
+  } | string;
   kategori?: string;
   zaman_artisi?: number;
 }

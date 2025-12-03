@@ -23,6 +23,10 @@ export class LoginComponent implements OnInit {
   signupName = '';
   signupPhone = '';
   signupPassword = '';
+  signupIl = '';
+  signupIlce = '';
+  signupMahalle = '';
+  signupSokak = '';
 
   constructor(
     private authService: AuthService,
@@ -88,11 +92,15 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.signupError = '';
 
-    const signupData = {
+    const signupData: any = {
       isim: this.signupName,
       parola: this.signupPassword,
       telefon: this.signupPhone || undefined
     };
+    // Adres alanlarını birleştirerek tek string olarak gönder: il-ilce-mahalle-sokak
+    if (this.signupIl || this.signupIlce || this.signupMahalle || this.signupSokak) {
+      signupData.adres = `${this.signupIl}-${this.signupIlce}-${this.signupMahalle}-${this.signupSokak}`;
+    }
 
     this.authService.signup(signupData).subscribe({
       next: (response) => {
@@ -106,6 +114,10 @@ export class LoginComponent implements OnInit {
         this.signupName = '';
         this.signupPhone = '';
         this.signupPassword = '';
+        this.signupIl = '';
+        this.signupIlce = '';
+        this.signupMahalle = '';
+        this.signupSokak = '';
         setTimeout(() => {
           this.loginSuccess = '';
         }, 5000);

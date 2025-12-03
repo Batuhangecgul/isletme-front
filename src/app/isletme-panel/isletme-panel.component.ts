@@ -39,7 +39,8 @@ export class IsletmePanelComponent implements OnInit {
     telefon: '',
     adres: '',
     kategori: '',
-    parola: ''
+    parola: '',
+    zaman_artisi: 30
   };
 
   // Fotoğraf yükleme
@@ -201,7 +202,8 @@ export class IsletmePanelComponent implements OnInit {
   }
 
   getCalisanAdi(calisanId: number): string {
-    const calisan = this.calisanlar.find(c => c.id === calisanId);
+    // Önce id ile ara, sonra calisan_id ile ara
+    const calisan = this.calisanlar.find(c => c.id === calisanId || (c as any).calisan_id === calisanId);
     return calisan ? `${calisan.ad} ${calisan.soyad}` : 'Bilinmiyor';
   }
 
@@ -217,6 +219,21 @@ export class IsletmePanelComponent implements OnInit {
     return `${randevu.tarih || ''} - ${randevu.saat || ''}`;
   }
 
+  randevuGecmisMi(randevu: Randevu): boolean {
+    const simdi = new Date();
+    let randevuTarihi: Date;
+
+    if (randevu.baslangic_zamani) {
+      randevuTarihi = new Date(randevu.baslangic_zamani);
+    } else if (randevu.tarih && randevu.saat) {
+      randevuTarihi = new Date(`${randevu.tarih}T${randevu.saat}`);
+    } else {
+      return false;
+    }
+
+    return randevuTarihi < simdi;
+  }
+
   // ==================== İŞLETME GÜNCELLEME ====================
 
   duzenlemeyiBaslat(): void {
@@ -226,7 +243,8 @@ export class IsletmePanelComponent implements OnInit {
         telefon: this.isletme.telefon || '',
         adres: this.isletme.adres || '',
         kategori: this.isletme.kategori || '',
-        parola: ''
+        parola: '',
+        zaman_artisi: this.isletme.zaman_artisi || 30
       };
       this.duzenlemeModu = true;
     }
@@ -254,6 +272,9 @@ export class IsletmePanelComponent implements OnInit {
     }
     if (this.duzenlemeVerisi.parola && this.duzenlemeVerisi.parola.length >= 6) {
       guncellenecek.parola = this.duzenlemeVerisi.parola;
+    }
+    if (this.duzenlemeVerisi.zaman_artisi && this.duzenlemeVerisi.zaman_artisi !== this.isletme?.zaman_artisi) {
+      guncellenecek.zaman_artisi = this.duzenlemeVerisi.zaman_artisi;
     }
 
     if (Object.keys(guncellenecek).length === 0) {
