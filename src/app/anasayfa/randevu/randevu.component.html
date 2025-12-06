@@ -28,15 +28,15 @@
       <div class="calisanlar-grid">
         <div
           class="calisan-card"
-          *ngFor="let calisan of calisanlar"
-          [class.selected]="seciliCalisan?.id === calisan.id"
+          *ngFor="let calisan of calisanlar; let i = index"
+          [class.selected]="seciliCalisan === calisan"
           (click)="calisanSec(calisan)">
           <div class="calisan-avatar"></div>
           <div class="calisan-info">
             <strong>{{ calisan.ad }} {{ calisan.soyad }}</strong>
             <span class="calisan-saat">{{ calisan.baslangic_saati }} - {{ calisan.bitis_saati }}</span>
           </div>
-          <div class="check-icon" *ngIf="seciliCalisan?.id === calisan.id"></div>
+          <div class="check-icon" *ngIf="seciliCalisan === calisan"></div>
         </div>
       </div>
 
@@ -122,6 +122,10 @@
         <div class="telefon-input">
           <label>Telefon Numaranız</label>
           <input type="tel" [(ngModel)]="musteriTelefon" placeholder="05XX XXX XX XX" maxlength="11">
+        </div>
+        <div class="telefon-input">
+          <label>Yapılacak İşlem (Opsiyonel)</label>
+          <input type="text" [(ngModel)]="yapilacakIslem" placeholder="Örn: Saç kesimi, Sakal tıraşı..." maxlength="50">
         </div>
         <div class="hata-mesaj" *ngIf="randevuHata">{{ randevuHata }}</div>
       </div>

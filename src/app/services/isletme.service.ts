@@ -41,6 +41,7 @@ export interface Randevu {
   bitis_zamani?: string;
   durum: string;
   calisan?: Calisan;
+  yapilacak_islem?: string;
 }
 
 @Injectable({
@@ -103,6 +104,16 @@ export class IsletmeService {
   // Çalışanları listele (işletmeye göre)
   getCalisanlar(isletmeId: number): Observable<Calisan[]> {
     return this.http.get<Calisan[]>(`${this.apiUrl}/calisanlar?isletme_id=${isletmeId}`);
+  }
+
+  // Çalışan sil
+  calisanSil(isletmeId: number, calisanId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/isletmeler/${isletmeId}/calisanlar/${calisanId}`);
+  }
+
+  // Çalışan güncelle
+  calisanGuncelle(isletmeId: number, calisanId: number, calisan: Partial<Calisan>): Observable<Calisan> {
+    return this.http.patch<Calisan>(`${this.apiUrl}/isletmeler/${isletmeId}/calisanlar/${calisanId}`, calisan);
   }
 
   // Randevuları listele (işletmeye göre, filtreli)

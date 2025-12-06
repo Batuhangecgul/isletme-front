@@ -44,6 +44,10 @@
       <div class="search-box">
         <span class="search-icon">🔍</span>
         <input type="text" class="search-input" placeholder="İşletme veya hizmet ara..." [(ngModel)]="aramaMetni" (keyup.enter)="ara()">
+        <select class="kategori-select" [(ngModel)]="seciliKategori" (change)="ara()">
+          <option value="">Tüm Kategoriler</option>
+          <option *ngFor="let kategori of kategoriler" [value]="kategori">{{ kategori }}</option>
+        </select>
         <button class="search-btn" (click)="ara()">Ara</button>
       </div>
     </div>

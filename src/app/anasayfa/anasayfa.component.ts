@@ -15,6 +15,8 @@ export class AnasayfaComponent implements OnInit {
   yukleniyor = true;
   storageUrl = 'http://127.0.0.1:8000/storage/';
   aramaMetni = '';
+  seciliKategori = '';
+  kategoriler: string[] = [];
 
   // Modal
   modalAcik = false;
@@ -46,6 +48,7 @@ export class AnasayfaComponent implements OnInit {
           this.isletmeler = Object.values(data);
         }
         console.log('İşletmeler:', this.isletmeler);
+        this.kategorileriCikar();
         this.filtrelenmisIsletmeler = this.isletmeler;
         this.yukleniyor = false;
       },
@@ -67,17 +70,34 @@ export class AnasayfaComponent implements OnInit {
     this.isSloganCollapsed = !this.isSloganCollapsed;
   }
 
+  kategorileriCikar(): void {
+    const kategoriSet = new Set<string>();
+    this.isletmeler.forEach(isletme => {
+      if (isletme.kategori) {
+        kategoriSet.add(isletme.kategori);
+      }
+    });
+    this.kategoriler = Array.from(kategoriSet).sort();
+  }
+
   ara(): void {
     const metin = this.aramaMetni.toLowerCase().trim();
-    if (!metin) {
-      this.filtrelenmisIsletmeler = this.isletmeler;
-      return;
-    }
+
     this.filtrelenmisIsletmeler = this.isletmeler.filter(isletme => {
-      const isim = (isletme.isim || isletme.ad || '').toLowerCase();
-      const kategori = (isletme.kategori || '').toLowerCase();
-      const adres = (isletme.adres || '').toLowerCase();
-      return isim.includes(metin) || kategori.includes(metin) || adres.includes(metin);
+      // Kategori filtresi
+      if (this.seciliKategori && isletme.kategori !== this.seciliKategori) {
+        return false;
+      }
+
+      // Metin araması
+      if (metin) {
+        const isim = (isletme.isim || isletme.ad || '').toLowerCase();
+        const kategori = (isletme.kategori || '').toLowerCase();
+        const adres = (isletme.adres || '').toLowerCase();
+        return isim.includes(metin) || kategori.includes(metin) || adres.includes(metin);
+      }
+
+      return true;
     });
   }
 

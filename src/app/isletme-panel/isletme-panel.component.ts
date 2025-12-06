@@ -24,10 +24,22 @@ export class IsletmePanelComponent implements OnInit {
   };
   calisanFormAcik = false;
 
+  // Çalışan düzenleme
+  calisanDuzenlemeModu = false;
+  duzenlenenCalisan: Calisan | null = null;
+  calisanDuzenlemeVerisi = {
+    ad: '',
+    soyad: '',
+    baslangic_saati: '',
+    bitis_saati: ''
+  };
+
   // Randevular
   randevular: Randevu[] = [];
   seciliDurum = '';
   seciliTarih = '';
+  seciliRandevu: Randevu | null = null;
+  detayModalAcik = false;
 
   // Tab yönetimi
   aktifTab: 'genel' | 'calisanlar' | 'randevular' = 'genel';
@@ -115,6 +127,72 @@ export class IsletmePanelComponent implements OnInit {
         this.yeniCalisan = { ad: '', soyad: '', baslangic_saati: '09:00', bitis_saati: '18:00' };
       },
       error: (err) => console.error('Çalışan eklenemedi:', err)
+    });
+  }
+
+  calisanSil(calisan: Calisan): void {
+    if (!this.isletmeId) return;
+
+    const calisanId = calisan.id || (calisan as any).calisan_id;
+    if (!calisanId) {
+      console.error('Çalışan ID bulunamadı');
+      return;
+    }
+
+    if (!confirm(`${calisan.ad} ${calisan.soyad} isimli çalışanı silmek istediğinize emin misiniz?`)) {
+      return;
+    }
+
+    this.isletmeService.calisanSil(this.isletmeId, calisanId).subscribe({
+      next: () => {
+        console.log('Çalışan silindi');
+        this.calisanlariYukle();
+      },
+      error: (err) => console.error('Çalışan silinemedi:', err)
+    });
+  }
+
+  calisanDuzenle(calisan: Calisan): void {
+    this.duzenlenenCalisan = calisan;
+    this.calisanDuzenlemeVerisi = {
+      ad: calisan.ad,
+      soyad: calisan.soyad,
+      baslangic_saati: calisan.baslangic_saati?.substring(0, 5) || '09:00',
+      bitis_saati: calisan.bitis_saati?.substring(0, 5) || '18:00'
+    };
+    this.calisanDuzenlemeModu = true;
+    this.calisanFormAcik = false;
+  }
+
+  calisanDuzenlemeIptal(): void {
+    this.calisanDuzenlemeModu = false;
+    this.duzenlenenCalisan = null;
+    this.calisanDuzenlemeVerisi = { ad: '', soyad: '', baslangic_saati: '', bitis_saati: '' };
+  }
+
+  calisanGuncelle(): void {
+    if (!this.isletmeId || !this.duzenlenenCalisan) return;
+
+    const calisanId = this.duzenlenenCalisan.id || (this.duzenlenenCalisan as any).calisan_id;
+    if (!calisanId) {
+      console.error('Çalışan ID bulunamadı');
+      return;
+    }
+
+    const guncelVeri = {
+      ad: this.calisanDuzenlemeVerisi.ad,
+      soyad: this.calisanDuzenlemeVerisi.soyad,
+      baslangic_saati: this.calisanDuzenlemeVerisi.baslangic_saati + ':00',
+      bitis_saati: this.calisanDuzenlemeVerisi.bitis_saati + ':00'
+    };
+
+    this.isletmeService.calisanGuncelle(this.isletmeId, calisanId, guncelVeri).subscribe({
+      next: () => {
+        console.log('Çalışan güncellendi');
+        this.calisanlariYukle();
+        this.calisanDuzenlemeIptal();
+      },
+      error: (err) => console.error('Çalışan güncellenemedi:', err)
     });
   }
 
@@ -357,6 +435,17 @@ export class IsletmePanelComponent implements OnInit {
     if (fileInput) {
       fileInput.click();
     }
+  }
+
+  // Randevu Detay Modal
+  randevuDetayGoster(randevu: Randevu): void {
+    this.seciliRandevu = randevu;
+    this.detayModalAcik = true;
+  }
+
+  detayModalKapat(): void {
+    this.detayModalAcik = false;
+    this.seciliRandevu = null;
   }
 
   logout(): void {

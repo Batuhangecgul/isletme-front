@@ -40,12 +40,9 @@ export class RandevuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Bugünün tarihini ayarla
     const now = new Date();
     this.bugun = now.toISOString().split('T')[0];
     this.seciliTarih = this.bugun;
-
-    // Maksimum tarih: 7 gün sonrası
     const maxDate = new Date();
     maxDate.setDate(maxDate.getDate() + 7);
     this.maksimumTarih = maxDate.toISOString().split('T')[0];
@@ -59,7 +56,6 @@ export class RandevuComponent implements OnInit {
   verileriYukle(): void {
     if (!this.isletmeId) return;
 
-    // İşletme bilgilerini yükle
     this.isletmeService.getIsletme(this.isletmeId).subscribe({
       next: (data: any) => {
         this.isletme = data.isletme || data.data || data;
@@ -69,7 +65,6 @@ export class RandevuComponent implements OnInit {
       error: (err) => console.error('İşletme yüklenemedi:', err)
     });
 
-    // Çalışanları yükle
     this.isletmeService.getCalisanlar(this.isletmeId).subscribe({
       next: (data: any) => {
         this.calisanlar = Array.isArray(data) ? data : (data.data || data.calisanlar || []);
@@ -84,6 +79,8 @@ export class RandevuComponent implements OnInit {
   }
 
   calisanSec(calisan: Calisan): void {
+    console.log('Seçilen çalışan:', calisan);
+    console.log('Çalışan ID:', calisan.id);
     this.seciliCalisan = calisan;
     this.seciliSaat = '';
     this.slotlariOlustur();
@@ -111,8 +108,18 @@ export class RandevuComponent implements OnInit {
     console.log('İşletme zaman_artisi:', this.isletme?.zaman_artisi);
     console.log('Kullanılan slot süresi:', slotSuresi);
 
+    // Bugün için geçmiş saatleri filtrele
+    const now = new Date();
+    const bugunTarih = now.toISOString().split('T')[0];
+    const simdikiDakika = now.getHours() * 60 + now.getMinutes();
+    const bugunMu = this.seciliTarih === bugunTarih;
+
     const tumSlotlar: string[] = [];
     for (let dakika = baslangic; dakika < bitis; dakika += slotSuresi) {
+      // Eğer bugünse ve saat geçmişse, bu slotu ekleme
+      if (bugunMu && dakika <= simdikiDakika) {
+        continue;
+      }
       tumSlotlar.push(this.minuteToSaat(dakika));
     }
 
@@ -143,27 +150,28 @@ export class RandevuComponent implements OnInit {
             saat = r.saat.substring(0, 5);
             console.log('saat alanından:', saat);
           }
-          if (saat && r.durum) {
-            randevuMap[saat] = r.durum;
+          // Randevu varsa ve yapilacak_islem null değilse durumuna göre işaretle
+          if (saat && r.yapilacak_islem !== null && r.yapilacak_islem !== undefined) {
+            randevuMap[saat] = r.durum || 'onaylandi';
+            console.log('Dolu slot eklendi:', saat, 'durum:', r.durum, 'yapilacak_islem:', r.yapilacak_islem);
           }
         });
         console.log('Randevu map:', randevuMap);
-
-        // Slotları oluştur
         this.slotlar = tumSlotlar.map(saat => {
           const durum = randevuMap[saat];
-          // iptal veya randevu yoksa müsait
-          if (!durum || durum === 'iptal') {
+          if (!durum) {
             return { saat, durum: 'musait' as const };
           }
-          return { saat, durum: durum as 'beklemede' | 'onaylandi' };
+          if (durum === 'beklemede') {
+            return { saat, durum: 'beklemede' as const };
+          }
+          return { saat, durum: 'onaylandi' as const };
         });
 
         this.slotlarYukleniyor = false;
       },
       error: (err) => {
         console.error('Randevular yüklenemedi:', err);
-        // Hata olsa bile slotları göster
         this.slotlar = tumSlotlar.map(saat => ({
           saat: saat,
           durum: 'musait' as const
@@ -193,10 +201,9 @@ export class RandevuComponent implements OnInit {
   geriDon(): void {
     this.router.navigate(['/']);
   }
-
-  // Randevu oluşturma
   musteriAdi: string = '';
   musteriTelefon: string = '';
+  yapilacakIslem: string = '';
   randevuYukleniyor = false;
   randevuBasarili = false;
   randevuHata = '';
@@ -232,7 +239,8 @@ export class RandevuComponent implements OnInit {
       baslangic_zamani: baslangicZamani,
       bitis_zamani: bitisZamani,
       telefon: this.musteriTelefon,
-      alan_kisi: this.musteriAdi
+      alan_kisi: this.musteriAdi,
+      yapilacak_islem: this.yapilacakIslem || undefined
     };
 
     console.log('Randevu verileri:', randevuData);
@@ -242,7 +250,6 @@ export class RandevuComponent implements OnInit {
         console.log('Randevu oluşturuldu:', response);
         this.randevuYukleniyor = false;
         this.randevuBasarili = true;
-        // 3 saniye sonra anasayfaya yönlendir
         setTimeout(() => {
           this.router.navigate(['/']);
         }, 3000);

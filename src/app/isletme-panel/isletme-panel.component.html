@@ -127,12 +127,39 @@
       <button class="submit-btn" (click)="calisanEkle()">Kaydet</button>
     </div>
 
+    <!-- Çalışan Düzenleme Formu -->
+    <div class="form-card edit-form-card" *ngIf="calisanDuzenlemeModu">
+      <h3>Çalışanı Düzenle</h3>
+      <div class="form-row">
+        <input type="text" [(ngModel)]="calisanDuzenlemeVerisi.ad" placeholder="Ad">
+        <input type="text" [(ngModel)]="calisanDuzenlemeVerisi.soyad" placeholder="Soyad">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Başlangıç Saati</label>
+          <input type="time" [(ngModel)]="calisanDuzenlemeVerisi.baslangic_saati">
+        </div>
+        <div class="form-group">
+          <label>Bitiş Saati</label>
+          <input type="time" [(ngModel)]="calisanDuzenlemeVerisi.bitis_saati">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="cancel-btn" (click)="calisanDuzenlemeIptal()">İptal</button>
+        <button class="submit-btn" (click)="calisanGuncelle()">Güncelle</button>
+      </div>
+    </div>
+
     <!-- Çalışan Listesi -->
     <div class="list-container">
       <div class="list-item" *ngFor="let calisan of calisanlar">
         <div class="item-info">
           <strong>{{ calisan.ad }} {{ calisan.soyad }}</strong>
           <span class="item-detail">{{ calisan.baslangic_saati }} - {{ calisan.bitis_saati }}</span>
+        </div>
+        <div class="item-actions">
+          <button class="edit-btn" (click)="calisanDuzenle(calisan)">✏️ Düzenle</button>
+          <button class="delete-btn" (click)="calisanSil(calisan)">🗑 Sil</button>
         </div>
       </div>
       <p *ngIf="calisanlar.length === 0" class="empty-message">Henüz çalışan eklenmemiş.</p>
@@ -166,32 +193,75 @@
            [class.gecmis]="randevuGecmisMi(randevu)">
         <div class="randevu-info">
           <div class="randevu-main">
-            <strong>{{ formatRandevuTarih(randevu) }}</strong>
+            <span class="calisan-adi">👤 {{ randevu.calisan ? (randevu.calisan.ad + ' ' + randevu.calisan.soyad) : getCalisanAdi(randevu.calisan_id) }}</span>
             <span class="durum-badge gecmis" *ngIf="randevuGecmisMi(randevu)">⏰ Geçmiş</span>
             <span class="durum-badge" *ngIf="!randevuGecmisMi(randevu)" [class.beklemede]="randevu.durum === 'beklemede'" [class.onaylandi]="randevu.durum === 'onaylandi'" [class.iptal]="randevu.durum === 'iptal'">{{ randevu.durum }}</span>
           </div>
           <div class="randevu-details">
-            <span *ngIf="randevu.alan_kisi">🧑 {{ randevu.alan_kisi }}</span>
-            <span>📞 {{ randevu.telefon }}</span>
-            <span>👤 {{ randevu.calisan ? (randevu.calisan.ad + ' ' + randevu.calisan.soyad) : getCalisanAdi(randevu.calisan_id) }}</span>
+            <span class="musteri-adi">🧑 {{ randevu.alan_kisi || 'Belirtilmemiş' }}</span>
+            <span class="randevu-tarih">📅 {{ formatRandevuTarih(randevu) }}</span>
           </div>
         </div>
-        <div class="randevu-actions" *ngIf="randevu.durum === 'beklemede'">
-          <button class="approve-btn" (click)="randevuOnayla(randevu.id || randevu.randevu_id)">✓ Onayla</button>
-          <button class="reject-btn" (click)="randevuIptal(randevu.id || randevu.randevu_id)">✕ İptal</button>
-        </div>
-        <div class="randevu-actions" *ngIf="randevu.durum === 'iptal'">
-          <button class="approve-btn" (click)="randevuOnayla(randevu.id || randevu.randevu_id)">✓ Onayla</button>
-          <button class="pending-btn" (click)="randevuBeklemedeYap(randevu.id || randevu.randevu_id)">⏳ Beklemeye Al</button>
-          <button class="delete-btn" (click)="randevuSil(randevu.id || randevu.randevu_id)">🗑 Sil</button>
-        </div>
-        <div class="randevu-actions" *ngIf="randevu.durum === 'onaylandi'">
-          <button class="pending-btn" (click)="randevuBeklemedeYap(randevu.id || randevu.randevu_id)">⏳ Beklemeye Al</button>
-          <button class="reject-btn" (click)="randevuIptal(randevu.id || randevu.randevu_id)">✕ İptal</button>
-          <button class="delete-btn" (click)="randevuSil(randevu.id || randevu.randevu_id)">🗑 Sil</button>
+        <div class="randevu-actions-right">
+          <button class="detail-btn" (click)="randevuDetayGoster(randevu)">📋 Detay</button>
         </div>
       </div>
       <p *ngIf="randevular.length === 0" class="empty-message">Randevu bulunamadı.</p>
+    </div>
+  </div>
+
+  <!-- Randevu Detay Modal -->
+  <div class="modal-overlay" *ngIf="detayModalAcik" (click)="detayModalKapat()">
+    <div class="modal-content randevu-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Randevu Detayı</h3>
+        <button class="close-btn" (click)="detayModalKapat()">✕</button>
+      </div>
+      <div class="modal-body" *ngIf="seciliRandevu">
+        <div class="detay-item">
+          <span class="detay-label">Çalışan:</span>
+          <span class="detay-value">{{ seciliRandevu.calisan ? (seciliRandevu.calisan.ad + ' ' + seciliRandevu.calisan.soyad) : getCalisanAdi(seciliRandevu.calisan_id) }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Müşteri:</span>
+          <span class="detay-value">{{ seciliRandevu.alan_kisi || 'Belirtilmemiş' }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Telefon:</span>
+          <span class="detay-value">📞 {{ seciliRandevu.telefon }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Tarih:</span>
+          <span class="detay-value">{{ formatRandevuTarih(seciliRandevu) }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Yapılacak İşlem:</span>
+          <span class="detay-value">{{ seciliRandevu.yapilacak_islem || 'Belirtilmemiş' }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Durum:</span>
+          <span class="detay-value durum-badge"
+                [class.beklemede]="seciliRandevu.durum === 'beklemede'"
+                [class.onaylandi]="seciliRandevu.durum === 'onaylandi'"
+                [class.iptal]="seciliRandevu.durum === 'iptal'">{{ seciliRandevu.durum }}</span>
+        </div>
+      </div>
+      <div class="modal-actions" *ngIf="seciliRandevu">
+        <ng-container *ngIf="seciliRandevu.durum === 'beklemede'">
+          <button class="approve-btn" (click)="randevuOnayla(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">✓ Onayla</button>
+          <button class="reject-btn" (click)="randevuIptal(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">✕ İptal</button>
+        </ng-container>
+        <ng-container *ngIf="seciliRandevu.durum === 'iptal'">
+          <button class="approve-btn" (click)="randevuOnayla(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">✓ Onayla</button>
+          <button class="pending-btn" (click)="randevuBeklemedeYap(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">⏳ Beklemeye Al</button>
+          <button class="delete-btn" (click)="randevuSil(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">🗑 Sil</button>
+        </ng-container>
+        <ng-container *ngIf="seciliRandevu.durum === 'onaylandi'">
+          <button class="pending-btn" (click)="randevuBeklemedeYap(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">⏳ Beklemeye Al</button>
+          <button class="reject-btn" (click)="randevuIptal(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">✕ İptal</button>
+          <button class="delete-btn" (click)="randevuSil(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">🗑 Sil</button>
+        </ng-container>
+      </div>
     </div>
   </div>
 
