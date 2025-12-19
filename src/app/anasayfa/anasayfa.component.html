@@ -1,133 +1,183 @@
+<!-- Full Screen Search View -->
+<div class="fullscreen-search" [class.page-ready]="sayfaHazir">
+  
+  <!-- Floating Header -->
+  <header class="floating-header" [class.visible]="sayfaHazir">
+    <div class="brand"><span class="text-blue">Anında</span> Randevu</div>
+    <nav class="actions">
+      <button class="btn-theme-toggle" (click)="toggleDarkMode()" [title]="isDarkMode ? 'Aydınlık Mod' : 'Karanlık Mod'">
+        {{ isDarkMode ? '☀️' : '🌙' }}
+      </button>
+      <a class="btn-login" routerLink="/login">İşletme Girişi</a>
+    </nav>
+  </header>
 
-<header class="anasayfa-header">
-	<div class="brand">Benim Randevum</div>
-	<nav class="actions">
-		<a class="login-btn" routerLink="/login">Giriş Yap</a>
-	</nav>
-</header>
-
-<main class="anasayfa-main">
-  <section class="cards-container" [class.collapsed]="isSloganCollapsed">
-    <div class="card card-small">
-      <img src="assets/koufor.jpg" alt="Kuaför">
-      <div class="card-overlay">
-        <h3>Kuaför</h3>
-      </div>
-    </div>
-    <div class="card card-large">
+  <!-- Background Images - Mini floating images in the middle 70% area -->
+  <div class="bg-images">
+    <div class="bg-image bg-1" [class.animate]="sayfaHazir">
       <img src="assets/berber.png" alt="Berber">
-      <div class="card-overlay">
-        <h3>Berber</h3>
-      </div>
     </div>
-    <div class="card card-small">
+    <div class="bg-image bg-2" [class.animate]="sayfaHazir">
+      <img src="assets/koufor.jpg" alt="Kuaför">
+    </div>
+    <div class="bg-image bg-3" [class.animate]="sayfaHazir">
       <img src="assets/oto.jpg" alt="Oto">
-      <div class="card-overlay">
-        <h3>Oto</h3>
-      </div>
     </div>
-  </section>
-
-  <section class="slogan-section" [class.collapsed]="isSloganCollapsed">
-    <div class="slogan-content">
-      <span class="slogan-icon">📍</span>
-      <h2>Şehrinizdeki <span class="highlight">En İyi İşletmeleri</span> Bulun</h2>
-      <p>Binlerce işletme arasından size en uygun olanı keşfedin</p>
+    <div class="bg-image bg-4" [class.animate]="sayfaHazir">
+      <img src="assets/Berber2.jpg" alt="Berber2">
     </div>
-    <button class="collapse-btn" (click)="toggleSlogan()">
-      <span class="collapse-icon">{{ isSloganCollapsed ? '▼' : '▲' }}</span>
-    </button>
-  </section>
+    <div class="bg-image bg-5" [class.animate]="sayfaHazir">
+      <img src="assets/Kuaför.jpg" alt="Kuaför">
+    </div>
+    <div class="bg-image bg-6" [class.animate]="sayfaHazir">
+      <img src="assets/Kuaför2.jpg" alt="Kuaför2">
+    </div>
+    <div class="bg-image bg-7" [class.animate]="sayfaHazir">
+      <img src="assets/otokuaför.jpg" alt="Oto Kuaför">
+    </div>
+    <div class="bg-image bg-8" [class.animate]="sayfaHazir">
+      <img src="assets/otokuaför2.jpg" alt="Oto Kuaför2">
+    </div>
+  </div>
 
-  <section class="search-section">
+  <!-- Search Content -->
+  <div class="search-content" [class.animate]="sayfaHazir">
+    <h1 class="main-title">
+      <span class="title-line">Randevunuzu</span>
+      <span class="title-line highlight">Hemen Alın</span>
+    </h1>
+    
+    <p class="subtitle">Şehrinizin en iyi işletmelerini keşfedin</p>
+    
     <div class="search-container">
       <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" placeholder="İşletme veya hizmet ara..." [(ngModel)]="aramaMetni" (keyup.enter)="ara()">
-        <button class="search-btn" (click)="ara()">Ara</button>
+        <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" class="search-input" placeholder="Kuaför, berber, güzellik salonu..." [(ngModel)]="aramaMetni" (keyup.enter)="ara()">
+        <button class="search-btn" (click)="ara()">
+          <span>Ara</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="quick-categories">
+        <button class="category-chip" (click)="aramaMetni='Kuaför'; ara()">
+          <span class="chip-icon">✂️</span>
+          <span>Kuaför</span>
+        </button>
+        <button class="category-chip" (click)="aramaMetni='Berber'; ara()">
+          <span class="chip-icon">💈</span>
+          <span>Berber</span>
+        </button>
+        <button class="category-chip" (click)="aramaMetni='Güzellik'; ara()">
+          <span class="chip-icon">💅</span>
+          <span>Güzellik</span>
+        </button>
+        <button class="category-chip" (click)="aramaMetni='Oto'; ara()">
+          <span class="chip-icon">🚗</span>
+          <span>Oto</span>
+        </button>
       </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- İşletmeler Listesi -->
-  <section class="isletmeler-section">
-    <div class="section-header">
-      <h2 class="section-title">{{ aramaMetni ? 'Arama Sonuçları' : 'Popüler İşletmeler' }}</h2>
-      <p class="section-subtitle" *ngIf="!aramaMetni">Size en yakın ve en çok tercih edilen işletmeler</p>
-      <p class="section-subtitle" *ngIf="aramaMetni">"{{ aramaMetni }}" için {{ filtrelenmisIsletmeler.length }} sonuç bulundu</p>
+<!-- Popüler İşletmeler Başlık Bölümü -->
+<section class="popular-header">
+  <h2 class="popular-title">Popüler İşletmeler</h2>
+  <p class="popular-subtitle">Favori İşletmeni Bul</p>
+</section>
+
+<!-- Results Section - Her zaman görünür -->
+<section class="results-section visible" id="results-section">
+  <div class="results-content">
+    <div class="loading-state" *ngIf="yukleniyor">
+      <div class="loader-ring"></div>
+      <span>İşletmeler yükleniyor...</span>
     </div>
 
-    <div class="isletmeler-grid" *ngIf="!yukleniyor">
-      <div class="isletme-card" *ngFor="let isletme of filtrelenmisIsletmeler">
-        <div class="isletme-img">
+    <div class="empty-state" *ngIf="!yukleniyor && filtrelenmisIsletmeler.length === 0">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <h3>Sonuç Bulunamadı</h3>
+      <p>Farklı anahtar kelimeler deneyebilirsiniz</p>
+    </div>
+
+    <div class="results-grid" *ngIf="!yukleniyor && filtrelenmisIsletmeler.length > 0">
+      <div class="isletme-card" *ngFor="let isletme of gosterilecekIsletmeler; let i = index" [style.animation-delay]="i * 0.05 + 's'">
+        <div class="card-image">
           <img [src]="getFotoUrl(isletme)" [alt]="isletme.isim || isletme.ad">
-          <div class="isletme-badge">
-            <span class="badge-kategori" *ngIf="isletme.kategori">{{ isletme.kategori }}</span>
-            <span class="badge-puan" *ngIf="isletme.puan">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-              {{ isletme.puan }}
-            </span>
+          <div class="card-overlay">
+            <span class="kategori-badge" *ngIf="isletme.kategori">{{ isletme.kategori }}</span>
           </div>
         </div>
-        <div class="isletme-body">
-          <div class="isletme-header">
-            <h3 class="isletme-ad">{{ isletme.isim || isletme.ad }}</h3>
-          </div>
-          <div class="isletme-details">
-            <div class="detail-item" *ngIf="isletme.adres">
+        <div class="card-body">
+          <h3 class="card-title">{{ isletme.isim || isletme.ad }}</h3>
+          <div class="card-info">
+            <div class="info-row" *ngIf="isletme.adres">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                 <circle cx="12" cy="10" r="3"/>
               </svg>
               <span>{{ isletme.adres }}</span>
             </div>
-            <div class="detail-item" *ngIf="isletme.telefon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            <div class="info-row" *ngIf="isletme.puan">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
-              <span>{{ isletme.telefon }}</span>
+              <span>{{ isletme.puan }}</span>
             </div>
           </div>
-          <div class="isletme-actions">
-            <button class="btn-detay" (click)="detayGoster(isletme)">Detaylar</button>
-            <button class="btn-randevu" (click)="randevuAl(isletme)">Randevu Al</button>
+          <div class="card-actions">
+            <button class="btn-detail" (click)="detayGoster(isletme)">Detaylar</button>
+            <button class="btn-appointment" (click)="randevuAl(isletme)">Randevu Al</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="yukleniyor" *ngIf="yukleniyor">
-      <div class="loader"></div>
-      <span>Yükleniyor...</span>
-    </div>
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="!yukleniyor && filtrelenmisIsletmeler.length > sayfaBasinaIsletme">
+      <button class="pagination-btn prev" (click)="oncekiSayfa()" [disabled]="mevcutSayfa === 1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Önceki Sayfa</span>
+      </button>
 
-    <div class="bos-liste" *ngIf="!yukleniyor && isletmeler.length === 0">
-      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>
-      <p>Henüz kayıtlı işletme bulunmuyor</p>
-    </div>
-  </section>
-</main>
+      <div class="pagination-info">
+        <span class="current-page">{{ mevcutSayfa }}</span>
+        <span class="page-separator">/</span>
+        <span class="total-pages">{{ toplamSayfa }}</span>
+      </div>
 
-<!-- İşletme Detay Modal -->
+      <button class="pagination-btn next" (click)="sonrakiSayfa()" [disabled]="mevcutSayfa === toplamSayfa">
+        <span>Sonraki Sayfa</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
 <div class="modal-overlay" *ngIf="modalAcik" (click)="modalKapat()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button class="modal-close" (click)="modalKapat()">✕</button>
-
     <div class="modal-body" *ngIf="seciliIsletme">
-      <!-- İşletme Fotoğrafı -->
       <div class="modal-header-img">
         <img [src]="getFotoUrl(seciliIsletme)" [alt]="seciliIsletme.isim || seciliIsletme.ad">
       </div>
-
-      <!-- İşletme Bilgileri -->
       <div class="modal-info">
         <h2>{{ seciliIsletme.isim || seciliIsletme.ad }}</h2>
-
         <div class="info-grid">
           <div class="info-item" *ngIf="seciliIsletme.kategori">
             <span class="info-label">Kategori</span>
@@ -147,8 +197,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Çalışanlar -->
       <div class="modal-calisanlar">
         <h3>Çalışanlar</h3>
         <div class="calisanlar-loading" *ngIf="calisanlarYukleniyor">
@@ -165,12 +213,9 @@
           <p class="empty-calisanlar" *ngIf="seciliIsletmeCalisanlar.length === 0">Henüz çalışan eklenmemiş.</p>
         </div>
       </div>
-
-      <!-- Randevu Al Butonu -->
       <div class="modal-actions">
-        <button class="btn-randevu-modal" (click)="randevuAl(seciliIsletme!)">Randevu Al</button>
+        <button class="btn-randevu-modal" (click)="randevuAl(seciliIsletme)">Randevu Al</button>
       </div>
     </div>
   </div>
 </div>
-

@@ -1,7 +1,12 @@
 <div class="panel-container">
   <div class="panel-header">
     <h1>İşletme Paneli</h1>
-    <button class="logout-btn" (click)="logout()">Çıkış Yap</button>
+    <div class="header-actions">
+      <button class="btn-theme-toggle" (click)="toggleDarkMode()" [title]="isDarkMode ? 'Aydınlık Mod' : 'Karanlık Mod'">
+        {{ isDarkMode ? '☀️' : '🌙' }}
+      </button>
+      <button class="logout-btn" (click)="logout()">Çıkış Yap</button>
+    </div>
   </div>
 
   <!-- Tab Menüsü -->

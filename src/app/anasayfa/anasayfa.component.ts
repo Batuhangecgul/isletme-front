@@ -15,6 +15,14 @@ export class AnasayfaComponent implements OnInit {
   yukleniyor = true;
   storageUrl = 'http://127.0.0.1:8000/storage/';
   aramaMetni = '';
+  isDarkMode = false;
+  aramaYapildi = false;
+  sayfaHazir = false;
+
+  // Pagination
+  sayfaBasinaIsletme = 20;
+  mevcutSayfa = 1;
+  toplamSayfa = 1;
 
   // Modal
   modalAcik = false;
@@ -28,7 +36,36 @@ export class AnasayfaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.checkDarkMode();
     this.isletmeleriYukle();
+    // Sayfa açılış animasyonu için kısa gecikme
+    setTimeout(() => {
+      this.sayfaHazir = true;
+    }, 100);
+    // Sayfa yüklendiğinde tüm işletmeler görünsün
+    this.aramaYapildi = true;
+  }
+
+  checkDarkMode(): void {
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === 'true') {
+      this.isDarkMode = true;
+      document.body.classList.add('dark-mode');
+    } else {
+      this.isDarkMode = false;
+      document.body.classList.remove('dark-mode');
+    }
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('darkMode', 'false');
+    }
   }
 
   isletmeleriYukle(): void {
@@ -47,6 +84,7 @@ export class AnasayfaComponent implements OnInit {
         }
         console.log('İşletmeler:', this.isletmeler);
         this.filtrelenmisIsletmeler = this.isletmeler;
+        this.hesaplaSayfaSayisi();
         this.yukleniyor = false;
       },
       error: (err) => {
@@ -54,6 +92,48 @@ export class AnasayfaComponent implements OnInit {
         this.yukleniyor = false;
       }
     });
+  }
+
+  // Pagination metodları
+  hesaplaSayfaSayisi(): void {
+    this.toplamSayfa = Math.ceil(this.filtrelenmisIsletmeler.length / this.sayfaBasinaIsletme);
+    if (this.toplamSayfa === 0) this.toplamSayfa = 1;
+  }
+
+  get gosterilecekIsletmeler(): Isletme[] {
+    const baslangic = (this.mevcutSayfa - 1) * this.sayfaBasinaIsletme;
+    const bitis = baslangic + this.sayfaBasinaIsletme;
+    return this.filtrelenmisIsletmeler.slice(baslangic, bitis);
+  }
+
+  sonrakiSayfa(): void {
+    if (this.mevcutSayfa < this.toplamSayfa) {
+      this.mevcutSayfa++;
+      this.scrollToResults();
+    }
+  }
+
+  oncekiSayfa(): void {
+    if (this.mevcutSayfa > 1) {
+      this.mevcutSayfa--;
+      this.scrollToResults();
+    }
+  }
+
+  sayfayaGit(sayfa: number): void {
+    if (sayfa >= 1 && sayfa <= this.toplamSayfa) {
+      this.mevcutSayfa = sayfa;
+      this.scrollToResults();
+    }
+  }
+
+  scrollToResults(): void {
+    setTimeout(() => {
+      const resultsSection = document.querySelector('.popular-header');
+      if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   }
 
   getFotoUrl(isletme: any): string {
@@ -71,14 +151,43 @@ export class AnasayfaComponent implements OnInit {
     const metin = this.aramaMetni.toLowerCase().trim();
     if (!metin) {
       this.filtrelenmisIsletmeler = this.isletmeler;
-      return;
+    } else {
+      this.filtrelenmisIsletmeler = this.isletmeler.filter(isletme => {
+        const isim = (isletme.isim || isletme.ad || '').toLowerCase();
+        const kategori = (isletme.kategori || '').toLowerCase();
+        const adres = (isletme.adres || '').toLowerCase();
+        return isim.includes(metin) || kategori.includes(metin) || adres.includes(metin);
+      });
     }
-    this.filtrelenmisIsletmeler = this.isletmeler.filter(isletme => {
-      const isim = (isletme.isim || isletme.ad || '').toLowerCase();
-      const kategori = (isletme.kategori || '').toLowerCase();
-      const adres = (isletme.adres || '').toLowerCase();
-      return isim.includes(metin) || kategori.includes(metin) || adres.includes(metin);
-    });
+    this.mevcutSayfa = 1; // Aramada sayfayı sıfırla
+    this.hesaplaSayfaSayisi();
+    this.aramaYapildi = true;
+    // Smooth scroll to results
+    setTimeout(() => {
+      const resultsSection = document.querySelector('.results-section');
+      if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  }
+
+  tumunuGoster(): void {
+    this.aramaMetni = '';
+    this.filtrelenmisIsletmeler = this.isletmeler;
+    this.aramaYapildi = true;
+    // Smooth scroll to results
+    setTimeout(() => {
+      const resultsSection = document.querySelector('.results-section');
+      if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  }
+
+  geriDon(): void {
+    this.aramaYapildi = false;
+    this.aramaMetni = '';
+    this.filtrelenmisIsletmeler = this.isletmeler;
   }
 
   // Modal işlemleri

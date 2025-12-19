@@ -1,6 +1,7 @@
 .randevu-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+  background: var(--bg-color);
+  transition: background-color 0.3s ease;
 }
 
 .randevu-header {
@@ -8,8 +9,13 @@
   align-items: center;
   gap: 20px;
   padding: 20px 30px;
-  background: linear-gradient(90deg, #0d6efd 0%, #6610f2 100%);
+  background: linear-gradient(90deg, #1a1a1a 0%, #2d2d2d 100%);
   color: #fff;
+}
+
+body.dark-mode .randevu-header {
+  background: linear-gradient(90deg, #f5f0e6 0%, #e8e0d0 100%);
+  color: #1a1a1a;
 }
 
 .back-btn {
@@ -23,6 +29,15 @@
   transition: all 0.2s;
 }
 
+body.dark-mode .back-btn {
+  background: rgba(0,0,0,0.1);
+  color: #1a1a1a;
+}
+
+body.dark-mode .back-btn:hover {
+  background: rgba(0,0,0,0.2);
+}
+
 .back-btn:hover {
   background: rgba(255,255,255,0.3);
 }
@@ -32,23 +47,32 @@
   font-size: 1.5rem;
 }
 
+.randevu-header h1 .randevu-text {
+  color: #007bff;
+}
+
+body.dark-mode .randevu-header h1 .randevu-text {
+  color: #007bff;
+}
+
 .isletme-banner {
-  background: #fff;
+  background: var(--card-bg);
   padding: 20px 30px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 15px;
+  transition: background-color 0.3s ease;
 }
 
 .isletme-banner h2 {
   margin: 0;
   font-size: 1.3rem;
-  color: #1a1a2e;
+  color: var(--text-color);
 }
 
 .kategori-badge {
-  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  background: linear-gradient(135deg, #007bff, #0056b3);
   color: #fff;
   padding: 6px 12px;
   border-radius: 20px;
@@ -62,14 +86,14 @@
   justify-content: center;
   padding: 60px;
   gap: 15px;
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #e0e0e0;
-  border-top-color: #0d6efd;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -91,11 +115,12 @@
 }
 
 .section {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 15px var(--shadow-color);
+  transition: background-color 0.3s ease;
 }
 
 .section-header {
@@ -108,7 +133,7 @@
 .step-number {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  background: linear-gradient(135deg, #007bff, #0056b3);
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -121,7 +146,7 @@
 .section-header h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #1a1a2e;
+  color: var(--text-color);
 }
 
 /* Çalışanlar Grid */
@@ -136,7 +161,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px;
-  background: #f8f9fa;
+  background: var(--bg-color);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
@@ -145,19 +170,19 @@
 }
 
 .calisan-card:hover {
-  background: #e9ecef;
+  background: var(--hover-bg);
   transform: translateY(-2px);
 }
 
 .calisan-card.selected {
-  border-color: #0d6efd;
-  background: #e7f1ff;
+  border-color: var(--primary-color);
+  background: rgba(0, 123, 255, 0.1);
 }
 
 .calisan-avatar {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  background: linear-gradient(135deg, #007bff, #0056b3);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -174,12 +199,12 @@
 
 .calisan-info strong {
   font-size: 0.95rem;
-  color: #333;
+  color: var(--text-color);
 }
 
 .calisan-saat {
   font-size: 0.8rem;
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .check-icon {
@@ -188,7 +213,7 @@
   right: 10px;
   width: 24px;
   height: 24px;
-  background: #0d6efd;
+  background: var(--primary-color);
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -206,14 +231,16 @@
 .tarih-input {
   padding: 14px 24px;
   font-size: 1.1rem;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   outline: none;
   transition: all 0.2s;
+  background: var(--input-bg);
+  color: var(--text-color);
 }
 
 .tarih-input:focus {
-  border-color: #0d6efd;
+  border-color: var(--primary-color);
 }
 
 .tarih-info {
@@ -221,7 +248,7 @@
   text-align: center;
   margin-top: 10px;
   font-size: 0.85rem;
-  color: #888;
+  color: var(--text-secondary);
 }
 
 /* Slotlar Grid */
@@ -231,7 +258,7 @@
   justify-content: center;
   gap: 12px;
   padding: 30px;
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .slots-grid {
@@ -245,7 +272,7 @@
   flex-direction: column;
   align-items: center;
   padding: 16px 12px;
-  background: #f8f9fa;
+  background: var(--bg-color);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
@@ -253,24 +280,24 @@
 }
 
 .slot-card:hover:not(.beklemede):not(.onaylandi) {
-  background: #e7f1ff;
+  background: rgba(0, 123, 255, 0.1);
   transform: translateY(-2px);
 }
 
 .slot-card.selected {
-  border-color: #0d6efd;
-  background: #e7f1ff;
+  border-color: var(--primary-color);
+  background: rgba(0, 123, 255, 0.1);
 }
 
 /* Müsait - Yeşil, tıklanabilir */
 .slot-card.musait {
-  background: #e8f5e9;
+  background: rgba(40, 167, 69, 0.1);
   cursor: pointer;
 }
 
 /* Beklemede - Sarı, tıklanamaz */
 .slot-card.beklemede {
-  background: #fff8e1;
+  background: rgba(255, 193, 7, 0.1);
   border-color: #ffc107;
   cursor: not-allowed;
   opacity: 0.8;
@@ -278,7 +305,7 @@
 
 /* Onaylandı - Kırmızı, tıklanamaz */
 .slot-card.onaylandi {
-  background: #ffebee;
+  background: rgba(244, 67, 54, 0.1);
   border-color: #f44336;
   cursor: not-allowed;
   opacity: 0.8;
@@ -287,7 +314,7 @@
 .slot-saat {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
 }
 
 .slot-durum {
@@ -310,8 +337,22 @@
 
 /* Özet */
 .section.ozet {
-  background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   color: #fff;
+}
+
+body.dark-mode .section.ozet {
+  background: linear-gradient(135deg, #f5f0e6 0%, #e8e0d0 100%);
+  color: #1a1a1a;
+}
+
+body.dark-mode .section.ozet .onayla-btn {
+  background: #1a1a1a;
+  color: #f5f0e6;
+}
+
+body.dark-mode .section.ozet .ozet-item .label {
+  opacity: 0.7;
 }
 
 .ozet-content h3 {
@@ -346,7 +387,7 @@
   width: 100%;
   padding: 14px 24px;
   background: #fff;
-  color: #0d6efd;
+  color: #1a1a1a;
   border: none;
   border-radius: 12px;
   font-size: 1rem;
@@ -446,7 +487,7 @@
 
 .empty-message {
   text-align: center;
-  color: #888;
+  color: var(--text-secondary);
   padding: 20px;
 }
 

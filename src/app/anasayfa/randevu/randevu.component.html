@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="randevu-header">
     <button class="back-btn" (click)="geriDon()"> Geri</button>
-    <h1>Randevu Al</h1>
+    <h1><span class="randevu-text">Randevu</span> Al</h1>
   </div>
 
   <!-- İşletme Bilgisi -->
@@ -29,14 +29,14 @@
         <div
           class="calisan-card"
           *ngFor="let calisan of calisanlar"
-          [class.selected]="seciliCalisan?.id === calisan.id"
+          [class.selected]="seciliCalisan === calisan"
           (click)="calisanSec(calisan)">
           <div class="calisan-avatar"></div>
           <div class="calisan-info">
             <strong>{{ calisan.ad }} {{ calisan.soyad }}</strong>
             <span class="calisan-saat">{{ calisan.baslangic_saati }} - {{ calisan.bitis_saati }}</span>
           </div>
-          <div class="check-icon" *ngIf="seciliCalisan?.id === calisan.id"></div>
+          <div class="check-icon" *ngIf="seciliCalisan === calisan">✓</div>
         </div>
       </div>
 
@@ -100,7 +100,7 @@
     <!-- Seçim Özeti & Onayla -->
     <div class="section ozet" *ngIf="seciliCalisan && seciliTarih && seciliSaat && !randevuBasarili">
       <div class="ozet-content">
-        <h3>Randevu Özeti</h3>
+        <h3> <span class="randevu-text">Randevu</span> Özeti</h3>
         <div class="ozet-detay">
           <div class="ozet-item">
             <span class="label">Çalışan:</span>

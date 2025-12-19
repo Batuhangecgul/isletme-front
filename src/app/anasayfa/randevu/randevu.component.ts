@@ -40,6 +40,9 @@ export class RandevuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Dark mode kontrolü
+    this.checkDarkMode();
+
     // Bugünün tarihini ayarla
     const now = new Date();
     this.bugun = now.toISOString().split('T')[0];
@@ -54,6 +57,15 @@ export class RandevuComponent implements OnInit {
       this.isletmeId = +params['id'];
       this.verileriYukle();
     });
+  }
+
+  checkDarkMode(): void {
+    const darkMode = localStorage.getItem('darkMode');
+    if (darkMode === 'true') {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
   }
 
   verileriYukle(): void {

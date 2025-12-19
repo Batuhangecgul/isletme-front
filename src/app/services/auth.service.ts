@@ -120,7 +120,11 @@ export class AuthService {
 
   // Giriş yap
   login(telefon: string, parola: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/isletmeler/login`, { telefon, parola })
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+    return this.http.post<LoginResponse>(`${this.apiUrl}/isletmeler/login`, { telefon, parola }, { headers })
       .pipe(
         tap(response => {
           this.setToken(response.token);
@@ -131,7 +135,11 @@ export class AuthService {
 
   // Kayıt ol (yeni işletme)
   signup(data: SignupRequest): Observable<SignupResponse> {
-    return this.http.post<SignupResponse>(`${this.apiUrl}/isletmeler`, data);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+    return this.http.post<SignupResponse>(`${this.apiUrl}/isletmeler`, data, { headers });
   }
 
   // Çıkış yap

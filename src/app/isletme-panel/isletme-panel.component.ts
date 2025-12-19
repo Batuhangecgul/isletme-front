@@ -13,6 +13,7 @@ export class IsletmePanelComponent implements OnInit {
   isletmeId: number | null = null;
   isletme: Isletme | null = null;
   storageUrl = 'http://127.0.0.1:8000/storage/';
+  isDarkMode = false;
 
   // Çalışanlar
   calisanlar: Calisan[] = [];
@@ -55,6 +56,7 @@ export class IsletmePanelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.checkDarkMode();
     this.route.params.subscribe(params => {
       this.isletmeId = +params['id'];
       console.log('İşletme ID:', this.isletmeId);
@@ -62,6 +64,28 @@ export class IsletmePanelComponent implements OnInit {
     });
 
     this.isletme = this.authService.getCurrentIsletme();
+  }
+
+  checkDarkMode(): void {
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === 'true') {
+      this.isDarkMode = true;
+      document.body.classList.add('dark-mode');
+    } else {
+      this.isDarkMode = false;
+      document.body.classList.remove('dark-mode');
+    }
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('darkMode', 'false');
+    }
   }
 
   verileriYukle(): void {

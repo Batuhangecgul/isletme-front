@@ -1,16 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit {
 
-  isLoginMode = true;
+  isLoginMode = false; // false = Kayıt Ol, true = Giriş Yap
   loading = false;
+  pageReady = false;
+  isDarkMode = false;
+
+  // Şifre göster/gizle
+  showLoginPassword = false;
+  showSignupPassword = false;
+
+  // Şifre gücü
+  passwordStrength = 0;
+  passwordStrengthText = '';
+  passwordStrengthClass = '';
 
   loginError = '';
   loginSuccess = '';
@@ -28,14 +40,114 @@ export class LoginComponent implements OnInit {
   signupMahalle = '';
   signupSokak = '';
 
+  // Validasyon durumları
+  validation = {
+    signupName: { touched: false, valid: false },
+    signupPhone: { touched: false, valid: true },
+    signupPassword: { touched: false, valid: false },
+    loginTelefon: { touched: false, valid: false },
+    loginPassword: { touched: false, valid: false }
+  };
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.checkDarkMode();
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
+    }
+    setTimeout(() => {
+      this.pageReady = true;
+    }, 100);
+  }
+
+  checkDarkMode(): void {
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === 'true') {
+      document.body.classList.add('dark-mode');
+      this.isDarkMode = true;
+    } else {
+      document.body.classList.remove('dark-mode');
+      this.isDarkMode = false;
+    }
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('darkMode', 'false');
+    }
+  }
+
+  // Şifre göster/gizle toggle
+  togglePasswordVisibility(field: 'login' | 'signup'): void {
+    if (field === 'login') {
+      this.showLoginPassword = !this.showLoginPassword;
+    } else {
+      this.showSignupPassword = !this.showSignupPassword;
+    }
+  }
+
+  // Şifre gücü hesaplama
+  checkPasswordStrength(): void {
+    const password = this.signupPassword;
+    let strength = 0;
+
+    if (password.length >= 6) strength++;
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+
+    this.passwordStrength = strength;
+
+    if (strength === 0) {
+      this.passwordStrengthText = '';
+      this.passwordStrengthClass = '';
+    } else if (strength <= 2) {
+      this.passwordStrengthText = 'Zayıf';
+      this.passwordStrengthClass = 'weak';
+    } else if (strength <= 3) {
+      this.passwordStrengthText = 'Orta';
+      this.passwordStrengthClass = 'medium';
+    } else {
+      this.passwordStrengthText = 'Güçlü';
+      this.passwordStrengthClass = 'strong';
+    }
+
+    this.validation.signupPassword.valid = password.length >= 6;
+  }
+
+  // Input validasyonları
+  validateField(field: string): void {
+    switch (field) {
+      case 'signupName':
+        this.validation.signupName.touched = true;
+        this.validation.signupName.valid = this.signupName.trim().length >= 2;
+        break;
+      case 'signupPhone':
+        this.validation.signupPhone.touched = true;
+        this.validation.signupPhone.valid = !this.signupPhone || /^[0-9]{10,11}$/.test(this.signupPhone.replace(/\s/g, ''));
+        break;
+      case 'signupPassword':
+        this.validation.signupPassword.touched = true;
+        this.checkPasswordStrength();
+        break;
+      case 'loginTelefon':
+        this.validation.loginTelefon.touched = true;
+        this.validation.loginTelefon.valid = this.loginTelefon.trim().length > 0;
+        break;
+      case 'loginPassword':
+        this.validation.loginPassword.touched = true;
+        this.validation.loginPassword.valid = this.loginPassword.length > 0;
+        break;
     }
   }
 

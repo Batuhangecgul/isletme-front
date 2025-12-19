@@ -1,4 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Light Mode (Krem/Off-White) */
+  --bg-color: #fdfbf7;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --card-bg: #ffffff;
+  --header-bg: rgba(253, 251, 247, 0.95);
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --input-bg: #ffffff;
+  --modal-bg: #ffffff;
+  --hover-bg: #f5f5f5;
+  --hero-title-color: #1a1a2e;
+  --hero-gradient-1: rgba(0, 123, 255, 0.08);
+  --hero-gradient-2: rgba(0, 86, 179, 0.05);
+  --hero-bg-start: #f8f9fa;
+  --hero-bg-mid: #e9ecef;
+}
+
+body.dark-mode {
+  /* Dark Mode */
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --card-bg: #1e1e1e;
+  --header-bg: rgba(30, 30, 30, 0.95);
+  --border-color: #333333;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --primary-color: #3a8fdc;
+  --primary-hover: #2c7bb6;
+  --input-bg: #2d2d2d;
+  --modal-bg: #1e1e1e;
+  --hover-bg: #2d2d2d;
+  --hero-title-color: #ffffff;
+  --hero-gradient-1: rgba(58, 143, 220, 0.15);
+  --hero-gradient-2: rgba(58, 143, 220, 0.08);
+  --hero-bg-start: #1a1a2e;
+  --hero-bg-mid: #121212;
+}
 
 * {
   margin: 0;
@@ -9,4 +52,8 @@
 html, body {
   width: 100%;
   height: 100%;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
