@@ -222,6 +222,12 @@ body.dark-mode .randevu-header h1 .randevu-text {
   font-size: 0.8rem;
 }
 
+.check-icon::after {
+  content: '✓';
+  font-weight: bold;
+  font-size: 14px;
+}
+
 /* Tarih Seçimi */
 .tarih-secimi {
   display: flex;

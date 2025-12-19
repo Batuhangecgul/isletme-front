@@ -31,10 +31,12 @@ export class LoginComponent implements OnInit {
 
   loginTelefon = '';
   loginPassword = '';
+  loginPhoneError = '';
 
   signupName = '';
   signupPhone = '';
   signupPassword = '';
+  signupPhoneError = '';
   signupIl = '';
   signupIlce = '';
   signupMahalle = '';
@@ -151,9 +153,21 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // Türkiye telefon formatı doğrulama (05xxxxxxxxx veya 5xxxxxxxxx)
+  private validatePhone(phone: string): boolean {
+    const cleaned = phone.replace(/\D/g, ''); // Tüm sayı-olmayan karakterleri sil
+    const phoneRegex = /^(0)?5\d{9}$/; // 05xxxxxxxxx veya 5xxxxxxxxx
+    return phoneRegex.test(cleaned);
+  }
+
   onLogin(): void {
+    this.loginPhoneError = '';
     if (!this.loginTelefon || !this.loginPassword) {
       this.loginError = 'Lütfen tüm alanları doldurun';
+      return;
+    }
+    if (!this.validatePhone(this.loginTelefon)) {
+      this.loginPhoneError = 'Geçerli bir Türkiye telefon numarası girin (05xxxxxxxxx)';
       return;
     }
 
@@ -191,8 +205,13 @@ export class LoginComponent implements OnInit {
   }
 
   onSignup(): void {
-    if (!this.signupName || !this.signupPassword) {
-      this.signupError = 'Lütfen zorunlu alanları doldurun';
+    this.signupPhoneError = '';
+    if (!this.signupName || !this.signupPassword || !this.signupPhone) {
+      this.signupError = 'İsim, telefon ve şifre zorunludur';
+      return;
+    }
+    if (!this.validatePhone(this.signupPhone)) {
+      this.signupPhoneError = 'Geçerli bir Türkiye telefon numarası girin (05xxxxxxxxx)';
       return;
     }
 
@@ -207,7 +226,7 @@ export class LoginComponent implements OnInit {
     const signupData: any = {
       isim: this.signupName,
       parola: this.signupPassword,
-      telefon: this.signupPhone || undefined
+      telefon: this.signupPhone
     };
     // Adres alanlarını birleştirerek tek string olarak gönder: il-ilce-mahalle-sokak
     if (this.signupIl || this.signupIlce || this.signupMahalle || this.signupSokak) {
@@ -245,8 +264,10 @@ export class LoginComponent implements OnInit {
   toggleMode(): void {
     this.isLoginMode = !this.isLoginMode;
     this.loginError = '';
+    this.loginPhoneError = '';
     this.loginSuccess = '';
     this.signupError = '';
+    this.signupPhoneError = '';
     this.signupSuccess = '';
   }
 }

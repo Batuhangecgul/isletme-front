@@ -296,6 +296,28 @@ body.dark-mode .bg-image.animate {
   color: var(--text-secondary);
 }
 
+.kategori-select {
+	border: none;
+	outline: none;
+	font-size: 1rem;
+	padding: 14px 16px;
+	background: #f0f0f0;
+	border-radius: 25px;
+	margin-right: 10px;
+	cursor: pointer;
+	color: #333;
+	min-width: 160px;
+	transition: background 0.2s ease;
+}
+
+.kategori-select:hover {
+	background: #e5e5e5;
+}
+
+.kategori-select:focus {
+	background: #e0e7ff;
+}
+
 .search-btn {
   display: flex;
   align-items: center;
