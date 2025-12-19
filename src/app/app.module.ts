@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './core/http/auth.interceptor';
+import { HttpErrorInterceptor } from './core/http/error.interceptor';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +11,7 @@ import { AnasayfaComponent } from './anasayfa/anasayfa.component';
 import { LoginComponent } from './login/login.component';
 import { IsletmePanelComponent } from './isletme-panel/isletme-panel.component';
 import { RandevuComponent } from './anasayfa/randevu/randevu.component';
+import { RandevuSorgulamaComponent } from './anasayfa/randevu-sorgulama/randevu-sorgulama/randevu-sorgulama.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,8 @@ import { RandevuComponent } from './anasayfa/randevu/randevu.component';
     AnasayfaComponent,
     LoginComponent,
     IsletmePanelComponent,
-    RandevuComponent
+    RandevuComponent,
+    RandevuSorgulamaComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +28,10 @@ import { RandevuComponent } from './anasayfa/randevu/randevu.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,6 @@
 <!-- Full Screen Search View -->
 <div class="fullscreen-search" [class.page-ready]="sayfaHazir">
-  
+
   <!-- Floating Header -->
   <header class="floating-header" [class.visible]="sayfaHazir">
     <div class="brand"><span class="text-blue">Anında</span> Randevu</div>
@@ -46,9 +46,9 @@
       <span class="title-line">Randevunuzu</span>
       <span class="title-line highlight">Hemen Alın</span>
     </h1>
-    
+
     <p class="subtitle">Şehrinizin en iyi işletmelerini keşfedin</p>
-    
+
     <div class="search-container">
       <div class="search-box">
         <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -64,7 +64,7 @@
           </svg>
         </button>
       </div>
-      
+
       <div class="quick-categories">
         <button class="category-chip" (click)="aramaMetni='Kuaför'; ara()">
           <span class="chip-icon">✂️</span>
@@ -85,7 +85,11 @@
       </div>
     </div>
   </div>
+<!-- ...existing code... -->
 </div>
+
+<!-- Sağ alt sabit Randevu Sorgula butonu -->
+<a class="btn-randevu-sorgula" routerLink="/randevu-sorgula">Randevu Sorgula</a>
 
 <!-- Popüler İşletmeler Başlık Bölümü -->
 <section class="popular-header">

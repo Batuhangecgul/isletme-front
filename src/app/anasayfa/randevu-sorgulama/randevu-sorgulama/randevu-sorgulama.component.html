@@ -1,0 +1,88 @@
+
+<div class="randevu-container">
+	<!-- Header -->
+	<div class="randevu-header">
+		<button class="back-btn" routerLink="/"> Geri</button>
+		<h1><span class="randevu-text">Randevu</span> Sorgula</h1>
+	</div>
+
+	<!-- İşletme Bilgisi -->
+	<div class="isletme-banner">
+		<h2>İşletme Adı</h2>
+		<span class="kategori-badge">Kategori</span>
+	</div>
+<div class="search-container">
+	<div class="search-box">
+		<svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<circle cx="11" cy="11" r="8"></circle>
+			<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+		</svg>
+		<input type="text" class="search-input" placeholder="Telefon numaranızı giriniz" [(ngModel)]="aramaMetni" (keyup.enter)="ara()">
+		<button class="search-btn" (click)="ara()">
+			<span>Ara</span>
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<line x1="5" y1="12" x2="19" y2="12"></line>
+				<polyline points="12 5 19 12 12 19"></polyline>
+			</svg>
+		</button>
+	</div>
+
+
+</div>	<!-- Sonuçlar Bölümü -->
+	<div class="results-section" style="margin-top:32px;">
+		<div *ngIf="yukleniyor" class="loading">
+			<div class="spinner"></div>
+			<span>Randevular sorgulanıyor...</span>
+		</div>
+		<div *ngIf="hataMesaji && !yukleniyor" class="empty-message">
+			{{ hataMesaji }}
+		</div>
+		<div *ngIf="randevular.length > 0 && !yukleniyor" class="results-grid" style="display: flex; flex-direction: column; align-items: center; gap: 32px; margin-top: 24px; max-width: 520px; margin-left:auto; margin-right:auto;">
+						<div class="randevu-card"
+								 *ngFor="let randevu of randevular"
+								 [ngClass]="{
+									 'onaylandi': randevu.durum === 'onaylandı',
+									 'iptal': randevu.durum === 'iptal',
+									 'bekleniyor': randevu.durum === 'bekleniyor' || randevu.durum === 'Bekleniyor'
+								 }"
+								 style="width:370px; margin:0;"
+						>
+						<div class="randevu-card"
+								 *ngFor="let randevu of randevular"
+								 style="width:440px; margin:0; padding:0; background:var(--card-bg); box-shadow:0 4px 16px var(--shadow-color); border-radius:20px; display:flex; flex-direction:column; align-items:stretch; overflow:hidden;"
+						>
+							<div style="padding: 32px 32px 18px 32px; display: flex; align-items: center; justify-content: space-between;">
+								<div>
+									<div style="font-size: 1.35rem; font-weight: 700; margin-bottom: 4px; letter-spacing:0.5px;">Randevu #{{ randevu.randevu_id }}</div>
+									<div style="font-size: 1.05rem; color: var(--text-secondary); font-weight:500;">{{ randevu.isletme_isim }}</div>
+								</div>
+								<span *ngIf="randevu.durum === 'onaylandı'" style="background:#e8f5e9; color:#43a047; font-size:1rem; font-weight:700; border-radius:16px; padding:8px 20px; border:2px solid #43a047;">Onaylandı</span>
+								<span *ngIf="randevu.durum === 'iptal'" style="background:#ffebee; color:#e53935; font-size:1rem; font-weight:700; border-radius:16px; padding:8px 20px; border:2px solid #e53935;">İptal</span>
+								<span *ngIf="randevu.durum === 'bekleniyor' || randevu.durum === 'Bekleniyor'" style="background:#fffde7; color:#fbc02d; font-size:1rem; font-weight:700; border-radius:16px; padding:8px 20px; border:2px solid #fbc02d;">Beklemede</span>
+							</div>
+							<div style="padding: 0 32px 32px 32px;">
+								<table style="width:100%; border-collapse:collapse; font-size:1.08rem;">
+									<tbody>
+										<tr>
+											<td style="padding:12px 0; color:var(--text-secondary); width:130px; font-weight:500;">Çalışan</td>
+											<td style="padding:12px 0; font-weight:600; color:var(--text-color);">{{ randevu.calisan_ad }} {{ randevu.calisan_soyad }}</td>
+										</tr>
+										<tr>
+											<td style="padding:12px 0; color:var(--text-secondary); font-weight:500;">Telefon</td>
+											<td style="padding:12px 0; font-weight:600; color:var(--text-color);">{{ randevu.telefon }}</td>
+										</tr>
+										<tr>
+											<td style="padding:12px 0; color:var(--text-secondary); font-weight:500;">Başlangıç</td>
+											<td style="padding:12px 0; font-weight:600; color:var(--text-color);">{{ randevu.baslangic_zamani | date:'dd.MM.yyyy HH:mm' }}</td>
+										</tr>
+										<tr>
+											<td style="padding:12px 0; color:var(--text-secondary); font-weight:500;">Bitiş</td>
+											<td style="padding:12px 0; font-weight:600; color:var(--text-color);">{{ randevu.bitis_zamani | date:'dd.MM.yyyy HH:mm' }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+			</div>
+		</div>
+	</div>
+</div>

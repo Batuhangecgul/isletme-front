@@ -1,3 +1,44 @@
+/* Randevu kartı için light/dark mod desteği */
+.randevu-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+  box-shadow: 0 6px 24px var(--shadow-color);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.randevu-card.onaylandi {
+  background: #e8f5e9;
+  color: #222;
+}
+.randevu-card.iptal {
+  background: #ffebee;
+  color: #222;
+}
+.randevu-card.bekleniyor {
+  background: #fffde7;
+  color: #222;
+}
+body.dark-mode .randevu-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+body.dark-mode .randevu-card.onaylandi {
+  background: #388e3c;
+  color: #fff;
+}
+body.dark-mode .randevu-card.iptal {
+  background: #b71c1c;
+  color: #fff;
+}
+body.dark-mode .randevu-card.bekleniyor {
+  background: #fbc02d;
+  color: #222;
+}
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 

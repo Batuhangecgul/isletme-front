@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Isletme {
   id?: number;
@@ -24,7 +25,7 @@ export interface LoginResponse {
 export interface SignupRequest {
   isim: string;
   parola: string;
-  telefon?: string;
+  telefon: string;
   adres?: {
     il?: string;
     ilce?: string;
@@ -50,7 +51,7 @@ export interface ProfilResponse {
 })
 export class AuthService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiBaseUrl;
   private tokenKey = 'token';
   private isletmeKey = 'isletme';
 
