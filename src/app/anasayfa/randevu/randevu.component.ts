@@ -124,6 +124,7 @@ export class RandevuComponent implements OnInit {
     console.log('Kullanılan slot süresi:', slotSuresi);
 
     const tumSlotlar: string[] = [];
+<<<<<<< HEAD
     const bugunStr = this.bugun; // "YYYY-MM-DD" formatında
     const seciliTarihStr = this.seciliTarih;
     let simdikiDakika = 0;
@@ -134,6 +135,9 @@ export class RandevuComponent implements OnInit {
     for (let dakika = baslangic; dakika < bitis; dakika += slotSuresi) {
       // Eğer bugünün tarihi seçiliyse ve slot geçmişteyse ekleme
       if (seciliTarihStr === bugunStr && dakika <= simdikiDakika) continue;
+=======
+    for (let dakika = baslangic; dakika < bitis; dakika += slotSuresi) {
+>>>>>>> 003a2eb87ab72c13c3973fe0a017be290e54ad6c
       tumSlotlar.push(this.minuteToSaat(dakika));
     }
 
@@ -221,7 +225,11 @@ export class RandevuComponent implements OnInit {
   yapilacakIslem: string = '';
   randevuYukleniyor = false;
   randevuBasarili = false;
+<<<<<<< HEAD
   randevuHata = ''; // Hata mesajı
+=======
+  randevuHata = '';
+>>>>>>> 003a2eb87ab72c13c3973fe0a017be290e54ad6c
 
   randevuOlustur(): void {
     if (!this.seciliCalisan || !this.seciliTarih || !this.seciliSaat || !this.musteriTelefon || !this.musteriAdi || !this.isletmeId) {
