@@ -209,6 +209,7 @@ export class RandevuComponent implements OnInit {
   // Randevu oluşturma
   musteriAdi: string = '';
   musteriTelefon: string = '';
+  yapilacakIslem: string = '';
   randevuYukleniyor = false;
   randevuBasarili = false;
   randevuHata = '';
@@ -244,7 +245,8 @@ export class RandevuComponent implements OnInit {
       baslangic_zamani: baslangicZamani,
       bitis_zamani: bitisZamani,
       telefon: this.musteriTelefon,
-      alan_kisi: this.musteriAdi
+      alan_kisi: this.musteriAdi,
+      yapilacak_islem: this.yapilacakIslem
     };
 
     console.log('Randevu verileri:', randevuData);

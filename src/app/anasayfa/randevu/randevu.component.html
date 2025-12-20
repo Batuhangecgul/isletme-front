@@ -123,6 +123,10 @@
           <label>Telefon Numaranız</label>
           <input type="tel" [(ngModel)]="musteriTelefon" placeholder="05XX XXX XX XX" maxlength="11">
         </div>
+        <div class="telefon-input">
+          <label>Yapılacak İşlem</label>
+          <input type="text" [(ngModel)]="yapilacakIslem" placeholder="Örn: Saç kesimi, sakal tıraşı">
+        </div>
         <div class="hata-mesaj" *ngIf="randevuHata">{{ randevuHata }}</div>
       </div>
       <button class="onayla-btn" (click)="randevuOlustur()" [disabled]="randevuYukleniyor">
