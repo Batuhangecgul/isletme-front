@@ -1,0 +1,150 @@
+
+<div class="randevu-container">
+	<!-- Header -->
+	<div class="randevu-header">
+		<button class="back-btn" routerLink="/"> Geri</button>
+		<h1><span class="randevu-text">Randevu</span> Sorgula</h1>
+	</div>
+
+	<!-- İşletme Bilgisi -->
+	<div class="isletme-banner">
+		<h2>Randevu</h2>
+		<span class="kategori-badge">Sorgula</span>
+	</div>
+<div class="search-container">
+	<div class="search-box">
+		<svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<circle cx="11" cy="11" r="8"></circle>
+			<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+		</svg>
+		<input type="text" class="search-input" placeholder="Telefon numaranızı giriniz" [(ngModel)]="aramaMetni" (keyup.enter)="ara()">
+		<button class="search-btn" (click)="ara()">
+			<span>Ara</span>
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<line x1="5" y1="12" x2="19" y2="12"></line>
+				<polyline points="12 5 19 12 12 19"></polyline>
+			</svg>
+		</button>
+	</div>
+
+
+</div>	<!-- Sonuçlar Bölümü -->
+	<div class="results-section">
+		<div *ngIf="yukleniyor" class="loading">
+			<div class="spinner"></div>
+			<span>Randevular sorgulanıyor...</span>
+		</div>
+		<div *ngIf="hataMesaji && !yukleniyor" class="empty-message">
+			{{ hataMesaji }}
+		</div>
+		<div *ngIf="randevular.length > 0 && !yukleniyor" class="results-grid">
+			<div class="randevu-card" *ngFor="let randevu of randevular"
+					 [ngClass]="{
+						 'status-onaylandi': randevu.durum === 'onaylandı',
+						 'status-iptal': randevu.durum === 'iptal',
+						 'status-bekleniyor': randevu.durum === 'bekleniyor' || randevu.durum === 'Bekleniyor'
+					 }">
+				
+				<!-- Card Header -->
+				<div class="card-header">
+					<div class="header-left">
+						<div class="randevu-id">
+							<svg class="id-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+								<line x1="16" y1="2" x2="16" y2="6"></line>
+								<line x1="8" y1="2" x2="8" y2="6"></line>
+								<line x1="3" y1="10" x2="21" y2="10"></line>
+							</svg>
+							<span>Randevu #{{ randevu.randevu_id }}</span>
+						</div>
+						<div class="isletme-name">{{ randevu.isletme_isim }}</div>
+					</div>
+					<div class="header-right">
+						<span class="status-badge status-onaylandi" *ngIf="randevu.durum === 'onaylandı'">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+								<polyline points="20 6 9 17 4 12"></polyline>
+							</svg>
+							Onaylandı
+						</span>
+						<span class="status-badge status-iptal" *ngIf="randevu.durum === 'iptal'">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+							</svg>
+							İptal
+						</span>
+						<span class="status-badge status-bekleniyor" *ngIf="randevu.durum === 'bekleniyor' || randevu.durum === 'Bekleniyor' || !randevu.durum || (randevu.durum !== 'onaylandı' && randevu.durum !== 'iptal')">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+								<circle cx="12" cy="12" r="10"></circle>
+								<polyline points="12 6 12 12 16 14"></polyline>
+							</svg>
+							Beklemede
+						</span>
+					</div>
+				</div>
+
+				<!-- Card Body -->
+				<div class="card-body">
+					<div class="info-row">
+						<div class="info-icon">
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+								<circle cx="12" cy="7" r="4"></circle>
+							</svg>
+						</div>
+						<div class="info-content">
+							<span class="info-label">Çalışan</span>
+							<span class="info-value">{{ randevu.calisan_ad }} {{ randevu.calisan_soyad }}</span>
+						</div>
+					</div>
+
+					<div class="info-row">
+						<div class="info-icon">
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+							</svg>
+						</div>
+						<div class="info-content">
+							<span class="info-label">Telefon</span>
+							<span class="info-value">{{ randevu.telefon }}</span>
+						</div>
+					</div>
+
+					<div class="time-section">
+						<div class="time-item">
+							<div class="time-icon-wrapper start">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<polyline points="9 18 15 12 9 6"></polyline>
+								</svg>
+							</div>
+							<div class="time-content">
+								<span class="time-label">Başlangıç</span>
+								<span class="time-value">{{ randevu.baslangic_zamani | date:'dd.MM.yyyy HH:mm' }}</span>
+							</div>
+						</div>
+
+						<div class="time-divider">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<line x1="5" y1="12" x2="19" y2="12"></line>
+								<polyline points="12 5 19 12 12 19"></polyline>
+							</svg>
+						</div>
+
+						<div class="time-item">
+							<div class="time-icon-wrapper end">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+									<polyline points="9 11 12 14 15 10"></polyline>
+								</svg>
+							</div>
+							<div class="time-content">
+								<span class="time-label">Bitiş</span>
+								<span class="time-value">{{ randevu.bitis_zamani | date:'dd.MM.yyyy HH:mm' }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
