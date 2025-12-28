@@ -49,7 +49,7 @@ export interface Randevu {
 })
 export class IsletmeService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'https://laravel-production-b9e5.up.railway.app/api';
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',

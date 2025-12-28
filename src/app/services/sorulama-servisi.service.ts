@@ -23,7 +23,7 @@ export interface RandevuSorgulaResponse {
   providedIn: 'root'
 })
 export class SorulamaServisiService {
-  private apiUrl = 'http://127.0.0.1:8000/api/randevu-sorgula';
+  private apiUrl = 'https://laravel-production-b9e5.up.railway.app/api/randevu-sorgula';
 
   constructor(private http: HttpClient) { }
 

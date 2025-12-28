@@ -12,7 +12,7 @@ export class IsletmePanelComponent implements OnInit {
 
   isletmeId: number | null = null;
   isletme: Isletme | null = null;
-  storageUrl = 'http://127.0.0.1:8000/storage/';
+  storageUrl = 'https://laravel-production-b9e5.up.railway.app/storage/';
   isDarkMode = false;
 
   // Çalışanlar
