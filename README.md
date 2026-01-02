@@ -20,9 +20,33 @@ Angular ile geliştirilmiş modern bir randevu sistemi frontend uygulaması. Kul
 
 - **Framework**: Angular 14
 - **Dil**: TypeScript
+- **State Management**: RxJS BehaviorSubject + LocalStorage
+- **HTTP**: HttpClient + Interceptors
 - **Stil**: CSS
 - **Build Tool**: Angular CLI
 - **Test**: Jasmine + Karma
+
+## 📚 Mimari Dokümantasyon
+
+Proje mimarisi ve state management hakkında detaylı bilgi için:
+
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Genel mimari yapı, katmanlar ve design patterns
+- **[STATE-MANAGEMENT.md](./STATE-MANAGEMENT.md)** - State management stratejileri ve best practices
+- **[DIAGRAMS.md](./DIAGRAMS.md)** - Görsel diyagramlar ve veri akış şemaları
+
+### Hızlı Mimari Özeti
+
+Proje **layered architecture** (katmanlı mimari) prensiplerine uygun şekilde tasarlanmıştır:
+
+1. **Presentation Layer** (Components): UI ve kullanıcı etkileşimleri
+2. **Service Layer** (Services): İş mantığı ve HTTP çağrıları
+3. **Core Layer** (Interceptors): Global işlevler (auth, error handling)
+
+**State Management**:
+- Component-level state için lokal değişkenler
+- Application-level state için RxJS BehaviorSubject
+- Persistent state için LocalStorage
+- Reactive programming ile Observable pattern
 
 ## 📋 Gereksinimler
 
