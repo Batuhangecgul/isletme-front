@@ -30,9 +30,11 @@ Angular ile geliştirilmiş modern bir randevu sistemi frontend uygulaması. Kul
 
 Proje mimarisi ve state management hakkında detaylı bilgi için:
 
+- **[QUICK-START.md](./QUICK-START.md)** - 🚀 Hızlı başlangıç kılavuzu (Yeni geliştiriciler buradan başlasın!)
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Genel mimari yapı, katmanlar ve design patterns
 - **[STATE-MANAGEMENT.md](./STATE-MANAGEMENT.md)** - State management stratejileri ve best practices
 - **[DIAGRAMS.md](./DIAGRAMS.md)** - Görsel diyagramlar ve veri akış şemaları
+- **[CODE-EXAMPLES.md](./CODE-EXAMPLES.md)** - Pratik kod örnekleri ve implementasyonlar
 
 ### Hızlı Mimari Özeti
 
