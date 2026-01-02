@@ -4,7 +4,7 @@
 
 Uygulama şu adreste yayında:
 
-[https://aninda-randevu-git-main-batuhan-gecguls-projects.vercel.app](https://aninda-randevu-git-main-batuhan-gecguls-projects.vercel.app)
+ https://aninda-randevu.vercel.app/
 
 Angular ile geliştirilmiş modern bir randevu sistemi frontend uygulaması. Kullanıcıların şehirlerindeki işletmeleri keşfetmelerine ve kolayca randevu almalarına olanak sağlar.
 
