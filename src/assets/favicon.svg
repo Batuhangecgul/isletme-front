@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Calendar body -->
+  <rect x="10" y="20" width="80" height="70" rx="8" fill="url(#grad)"/>
+  <!-- Calendar top bar -->
+  <rect x="10" y="20" width="80" height="18" rx="8" fill="#3730A3"/>
+  <rect x="10" y="30" width="80" height="8" fill="#3730A3"/>
+  <!-- Calendar rings -->
+  <rect x="25" y="12" width="6" height="16" rx="3" fill="#1E1B4B"/>
+  <rect x="69" y="12" width="6" height="16" rx="3" fill="#1E1B4B"/>
+  <!-- Clock icon in center -->
+  <circle cx="50" cy="58" r="18" fill="white" opacity="0.95"/>
+  <circle cx="50" cy="58" r="15" fill="none" stroke="#4F46E5" stroke-width="2"/>
+  <!-- Clock hands -->
+  <line x1="50" y1="58" x2="50" y2="48" stroke="#4F46E5" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="50" y1="58" x2="58" y2="58" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+  <!-- Center dot -->
+  <circle cx="50" cy="58" r="2" fill="#4F46E5"/>
+</svg>
