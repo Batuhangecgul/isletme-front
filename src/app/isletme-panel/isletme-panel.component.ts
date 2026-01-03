@@ -12,7 +12,6 @@ export class IsletmePanelComponent implements OnInit {
 
   isletmeId: number | null = null;
   isletme: Isletme | null = null;
-  storageUrl = 'https://laravel-production-b9e5.up.railway.app/storage/';
   isDarkMode = false;
 
   // Çalışanlar
@@ -297,8 +296,8 @@ export class IsletmePanelComponent implements OnInit {
   // ==================== YARDIMCI METODLAR ====================
 
   getFotoUrl(): string | null {
-    if (this.isletme?.fotograf) {
-      return this.storageUrl + this.isletme.fotograf;
+    if ((this.isletme as any)?.fotograf_url) {
+      return (this.isletme as any).fotograf_url;
     }
     return null;
   }

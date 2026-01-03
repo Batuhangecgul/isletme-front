@@ -14,7 +14,6 @@ export class AnasayfaComponent implements OnInit {
   isletmeler: Isletme[] = [];
   filtrelenmisIsletmeler: Isletme[] = [];
   yukleniyor = true;
-  storageUrl = 'http://127.0.0.1:8000/storage/';
   aramaMetni = '';
   isDarkMode = false;
   aramaYapildi = false;
@@ -140,12 +139,12 @@ export class AnasayfaComponent implements OnInit {
     }, 100);
   }
 
-  getFotoUrl(isletme: any): string {
-    if (isletme.fotograf) {
-      return this.storageUrl + isletme.fotograf;
-    }
-    return 'assets/default-isletme.jpg';
+getFotoUrl(isletme: any): string {
+  if (isletme.fotograf_url) {
+    return isletme.fotograf_url;
   }
+  return 'assets/default-isletme.jpg';
+}
 
   toggleSlogan(): void {
     this.isSloganCollapsed = !this.isSloganCollapsed;
