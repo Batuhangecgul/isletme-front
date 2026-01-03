@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IsletmeService, Isletme, Calisan } from '../services/isletme.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-anasayfa',
@@ -30,12 +31,15 @@ export class AnasayfaComponent implements OnInit {
   seciliIsletmeCalisanlar: Calisan[] = [];
   calisanlarYukleniyor = false;
 
+
   constructor(
     private isletmeService: IsletmeService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    this.authService.forceLogout(); // Anasayfa açıldığında token silinsin
     this.checkDarkMode();
     this.isletmeleriYukle();
     // Sayfa açılış animasyonu için kısa gecikme
