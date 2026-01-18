@@ -17,9 +17,22 @@ export interface Isletme {
   zaman_artisi?: number;
 }
 
+export interface Calisan {
+  calisan_id?: number;
+  id?: number;
+  ad: string;
+  soyad: string;
+  email?: string;
+  isletme_id?: number;
+  baslangic_saati?: string;
+  bitis_saati?: string;
+}
+
 export interface LoginResponse {
   token: string;
-  isletme: Isletme;
+  isletme?: Isletme;
+  calisan?: Calisan;
+  message?: string;
 }
 
 export interface SignupRequest {
@@ -129,7 +142,26 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.setToken(response.token);
-          this.setStoredIsletme(response.isletme);
+          if (response.isletme) {
+            this.setStoredIsletme(response.isletme);
+          }
+        })
+      );
+  }
+
+  // Çalışan Girişi
+  calisanLogin(email: string, parola: string): Observable<LoginResponse> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+    return this.http.post<LoginResponse>(`${this.apiUrl}/calisanlar/login`, { email, parola }, { headers })
+      .pipe(
+        tap(response => {
+          this.setToken(response.token);
+          if (response.isletme) {
+            this.setStoredIsletme(response.isletme);
+          }
         })
       );
   }

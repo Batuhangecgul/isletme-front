@@ -29,23 +29,29 @@
     <div class="tab-container">
       <button 
         class="tab-btn" 
-        [class.active]="!isLoginMode"
-        (click)="isLoginMode = false">
+        [class.active]="!isLoginMode && !calisanLoginMode"
+        (click)="isLoginMode = false; calisanLoginMode = false;">
         Kayıt Ol
       </button>
       <button 
         class="tab-btn" 
-        [class.active]="isLoginMode"
-        (click)="isLoginMode = true">
+        [class.active]="isLoginMode && !calisanLoginMode"
+        (click)="isLoginMode = true; calisanLoginMode = false;">
         Giriş Yap
       </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="calisanLoginMode"
+        (click)="calisanLoginMode = true; isLoginMode = false;">
+        Çalışan
+      </button>
       <!-- Active Indicator -->
-      <div class="tab-indicator" [class.right]="isLoginMode"></div>
+      <div class="tab-indicator" [class.right]="isLoginMode" [class.far-right]="calisanLoginMode"></div>
     </div>
 
     <!-- Forms Container -->
     <div class="forms-wrapper">
-      <div class="forms-slider" [class.slide-login]="isLoginMode">
+      <div class="forms-slider" [class.slide-login]="isLoginMode" [class.slide-calisan]="calisanLoginMode">
         
         <!-- Signup Form -->
         <div class="form-panel signup-panel">
@@ -146,6 +152,41 @@
               <button type="button" class="toggle-password" (click)="togglePasswordVisibility('login')">
                 <span *ngIf="!showLoginPassword">👁️</span>
                 <span *ngIf="showLoginPassword">🙈</span>
+              </button>
+            </div>
+            
+            <button type="submit" class="submit-btn" [disabled]="loading">
+              <span *ngIf="!loading">Giriş Yap</span>
+              <span *ngIf="loading" class="loading-spinner"></span>
+              <span *ngIf="loading">Giriş yapılıyor...</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Çalışan Girişi Form -->
+        <div class="form-panel calisan-panel">
+          <h2>Çalışan Girişi</h2>
+          <p class="subtitle">Çalışan hesabınızla giriş yapın</p>
+          
+          <div *ngIf="calisanLoginError" class="error-msg">{{ calisanLoginError }}</div>
+          <div *ngIf="calisanLoginSuccess" class="success-msg">{{ calisanLoginSuccess }}</div>
+          
+          <form (ngSubmit)="onCalisanLogin()">
+            <div class="input-group floating-label" [class.has-value]="calisanEmail" [class.invalid]="validation.calisanEmail.touched && !validation.calisanEmail.valid" [class.valid]="validation.calisanEmail.touched && validation.calisanEmail.valid">
+              <input type="email" [(ngModel)]="calisanEmail" name="calisanEmail" (blur)="validateField('calisanEmail')" (input)="validateField('calisanEmail')" id="calisanEmail">
+              <label for="calisanEmail">E-mail *</label>
+              <span class="validation-icon" *ngIf="validation.calisanEmail.touched">
+                <span *ngIf="validation.calisanEmail.valid">✓</span>
+                <span *ngIf="!validation.calisanEmail.valid">!</span>
+              </span>
+            </div>
+            
+            <div class="input-group floating-label password-group" [class.has-value]="calisanPassword" [class.invalid]="validation.calisanPassword.touched && !validation.calisanPassword.valid" [class.valid]="validation.calisanPassword.touched && validation.calisanPassword.valid">
+              <input [type]="showCalisanPassword ? 'text' : 'password'" [(ngModel)]="calisanPassword" name="calisanPassword" (blur)="validateField('calisanPassword')" (input)="validateField('calisanPassword')" id="calisanPassword">
+              <label for="calisanPassword">Şifre *</label>
+              <button type="button" class="toggle-password" (click)="showCalisanPassword = !showCalisanPassword">
+                <span *ngIf="!showCalisanPassword">👁️</span>
+                <span *ngIf="showCalisanPassword">🙈</span>
               </button>
             </div>
             

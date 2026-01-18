@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AnasayfaComponent } from './anasayfa/anasayfa.component';
 import { LoginComponent } from './login/login.component';
 import { IsletmePanelComponent } from './isletme-panel/isletme-panel.component';
+import { CalisanPanelComponent } from './calisan-panel/calisan-panel.component';
 import { RandevuComponent } from './anasayfa/randevu/randevu.component';
 import { RandevuSorgulamaComponent } from './anasayfa/randevu-sorgulama/randevu-sorgulama/randevu-sorgulama.component';
 
@@ -19,6 +20,7 @@ import { RandevuSorgulamaComponent } from './anasayfa/randevu-sorgulama/randevu-
     AnasayfaComponent,
     LoginComponent,
     IsletmePanelComponent,
+    CalisanPanelComponent,
     RandevuComponent,
     RandevuSorgulamaComponent
   ],

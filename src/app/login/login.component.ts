@@ -10,7 +10,8 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  isLoginMode = false; // false = Kayıt Ol, true = Giriş Yap
+  isLoginMode = false; // false = Kayıt Ol, true = Giriş Yap / Çalışan Girişi
+  calisanLoginMode = false; // Çalışan Girişi modu
   loading = false;
   pageReady = false;
   isDarkMode = false;
@@ -18,6 +19,7 @@ export class LoginComponent implements OnInit {
   // Şifre göster/gizle
   showLoginPassword = false;
   showSignupPassword = false;
+  showCalisanPassword = false;
 
   // Şifre gücü
   passwordStrength = 0;
@@ -28,10 +30,16 @@ export class LoginComponent implements OnInit {
   loginSuccess = '';
   signupError = '';
   signupSuccess = '';
+  calisanLoginError = '';
+  calisanLoginSuccess = '';
 
   loginTelefon = '';
   loginPassword = '';
   loginPhoneError = '';
+
+  // Çalışan Girişi
+  calisanEmail = '';
+  calisanPassword = '';
 
   signupName = '';
   signupPhone = '';
@@ -48,7 +56,9 @@ export class LoginComponent implements OnInit {
     signupPhone: { touched: false, valid: true },
     signupPassword: { touched: false, valid: false },
     loginTelefon: { touched: false, valid: false },
-    loginPassword: { touched: false, valid: false }
+    loginPassword: { touched: false, valid: false },
+    calisanEmail: { touched: false, valid: false },
+    calisanPassword: { touched: false, valid: false }
   };
 
   constructor(
@@ -200,6 +210,38 @@ export class LoginComponent implements OnInit {
         this.loginError = err.error?.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
         console.error('Login hatası:', err);
         console.error('Error body:', err.error);
+      }
+    });
+  }
+
+  // Çalışan Girişi
+  onCalisanLogin(): void {
+    if (!this.calisanEmail || !this.calisanPassword) {
+      this.calisanLoginError = 'Lütfen e-mail ve şifre girin';
+      return;
+    }
+
+    this.loading = true;
+    this.calisanLoginError = '';
+
+    this.authService.calisanLogin(this.calisanEmail, this.calisanPassword).subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        this.calisanLoginSuccess = 'Giriş başarılı!';
+        
+        // Çalışan bilgisini localStorage'a kaydet
+        if (response.calisan) {
+          localStorage.setItem('calisan', JSON.stringify(response.calisan));
+        }
+
+        setTimeout(() => {
+          this.router.navigate(['/calisan-panel']);
+        }, 1000);
+      },
+      error: (err) => {
+        this.loading = false;
+        this.calisanLoginError = err.error?.message || 'Giriş başarısız. E-mail ve şifrenizi kontrol edin.';
+        console.error('Çalışan login hatası:', err);
       }
     });
   }

@@ -23,6 +23,7 @@ export interface Calisan {
   isletme_id: number;
   ad: string;
   soyad: string;
+  email?: string;
   baslangic_saati: string;
   bitis_saati: string;
   uzmanlik?: string;
@@ -49,7 +50,7 @@ export interface Randevu {
 })
 export class IsletmeService {
 
-  private apiUrl = 'https://laravel-production-b9e5.up.railway.app/api';
+  private apiUrl = 'http://127.0.0.1:8000/api';
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -99,6 +100,8 @@ export class IsletmeService {
   calisanEkle(calisan: {
     ad: string;
     soyad: string;
+    email?: string;
+    parola?: string;
     baslangic_saati: string;
     bitis_saati: string;
     isletme_id: number;

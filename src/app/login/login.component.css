@@ -213,7 +213,7 @@ body.dark-mode .tab-btn.active {
   position: absolute;
   top: 8px;
   left: 8px;
-  width: calc(50% - 8px);
+  width: calc(33.333% - 8px);
   height: calc(100% - 16px);
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   border-radius: 12px;
@@ -222,7 +222,10 @@ body.dark-mode .tab-btn.active {
   box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
 }
 .tab-indicator.right {
-  left: calc(50%);
+  left: calc(33.333%);
+}
+.tab-indicator.far-right {
+  left: calc(66.666%);
 }
 .forms-wrapper {
   overflow: hidden;
@@ -230,14 +233,17 @@ body.dark-mode .tab-btn.active {
 }
 .forms-slider {
   display: flex;
-  width: 200%;
+  width: 300%;
   transition: transform 0.6s cubic-bezier(0.68, -0.15, 0.265, 1.15);
 }
 .forms-slider.slide-login {
-  transform: translateX(-50%);
+  transform: translateX(-33.333%);
+}
+.forms-slider.slide-calisan {
+  transform: translateX(-66.666%);
 }
 .form-panel {
-  width: 50%;
+  width: 33.333%;
   padding: 30px 35px 40px;
   box-sizing: border-box;
 }

@@ -426,6 +426,11 @@
   background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
 }
 
+body.dark-mode .form-card.edit-form-card {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #2a2d5a 0%, #1e2240 100%);
+}
+
 .form-card h3 {
   margin: 0 0 20px 0;
   color: var(--text-color);
@@ -577,12 +582,15 @@
   font-size: 16px;
   display: block;
   font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .item-detail {
   color: var(--text-secondary);
   font-size: 14px;
-  margin-top: 4px;
+  display: block;
+  margin-bottom: 4px;
+  margin-right: 20px;
 }
 
 .item-actions {

@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'https://laravel-production-b9e5.up.railway.app/api',
+  apiBaseUrl: 'http://127.0.0.1:8000/api',
   storageUrl: 'http://127.0.0.1:8000/storage/'
 };
 

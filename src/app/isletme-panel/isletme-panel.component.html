@@ -120,6 +120,14 @@
         <input type="text" [(ngModel)]="yeniCalisan.soyad" placeholder="Soyad">
       </div>
       <div class="form-row">
+        <div style="position: relative; flex: 1;">
+          <input [type]="showParola ? 'text' : 'password'" [(ngModel)]="yeniCalisan.parola" placeholder="Parola (min 6 karakter)" style="width: 100%; padding-right: 35px;">
+          <button type="button" (click)="showParola = !showParola" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px; padding: 0;">
+            {{ showParola ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+      </div>
+      <div class="form-row">
         <div class="form-group">
           <label>Başlangıç Saati</label>
           <input type="time" [(ngModel)]="yeniCalisan.baslangic_saati">
@@ -140,14 +148,14 @@
         <input type="text" [(ngModel)]="calisanDuzenlemeVerisi.soyad" placeholder="Soyad">
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label>Başlangıç Saati</label>
-          <input type="time" [(ngModel)]="calisanDuzenlemeVerisi.baslangic_saati">
+        <div style="position: relative; flex: 1;">
+          <input [type]="showParola ? 'text' : 'password'" [(ngModel)]="calisanDuzenlemeVerisi.parola" placeholder="Yeni Parola (opsiyonel)" style="width: 100%; padding-right: 35px;">
+          <button type="button" (click)="showParola = !showParola" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 18px; padding: 0;">
+            {{ showParola ? '👁️' : '👁️‍🗨️' }}
+          </button>
         </div>
-        <div class="form-group">
-          <label>Bitiş Saati</label>
-          <input type="time" [(ngModel)]="calisanDuzenlemeVerisi.bitis_saati">
-        </div>
+      </div>
+      <div class="form-row">
       </div>
       <div class="form-actions">
         <button class="cancel-btn" (click)="calisanDuzenlemeIptal()">İptal</button>
@@ -160,6 +168,7 @@
       <div class="list-item" *ngFor="let calisan of calisanlar">
         <div class="item-info">
           <strong>{{ calisan.ad }} {{ calisan.soyad }}</strong>
+          <span class="item-detail">{{ calisan.email }}</span>
           <span class="item-detail">{{ calisan.baslangic_saati }} - {{ calisan.bitis_saati }}</span>
         </div>
         <div class="item-actions">

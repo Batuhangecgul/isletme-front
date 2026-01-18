@@ -16,9 +16,11 @@ export class IsletmePanelComponent implements OnInit {
 
   // Çalışanlar
   calisanlar: Calisan[] = [];
+  showParola = false; // Parola göster/gizle
   yeniCalisan = {
     ad: '',
     soyad: '',
+    parola: '',
     baslangic_saati: '09:00',
     bitis_saati: '18:00'
   };
@@ -30,6 +32,7 @@ export class IsletmePanelComponent implements OnInit {
   calisanDuzenlemeVerisi = {
     ad: '',
     soyad: '',
+    parola: '',
     baslangic_saati: '',
     bitis_saati: ''
   };
@@ -126,15 +129,20 @@ export class IsletmePanelComponent implements OnInit {
     console.log('isletmeId:', this.isletmeId);
     console.log('yeniCalisan:', this.yeniCalisan);
 
-    if (!this.isletmeId || !this.yeniCalisan.ad) {
+    if (!this.isletmeId || !this.yeniCalisan.ad || !this.yeniCalisan.parola) {
       console.log('Eksik alan var, return ediliyor');
-      alert('Lütfen en azından ad alanını doldurun');
+      alert('Lütfen ad ve parola alanlarını doldurun');
       return;
     }
+
+    // Email otomatik oluştur
+    const email = (this.yeniCalisan.ad.toLowerCase() + this.yeniCalisan.soyad.toLowerCase()).replace(/\s+/g, '') + '@' + this.isletme?.isim?.toLowerCase().replace(/\s+/g, '');
 
     const calisan = {
       ad: this.yeniCalisan.ad,
       soyad: this.yeniCalisan.soyad || '-',
+      email: email,
+      parola: this.yeniCalisan.parola,
       baslangic_saati: this.yeniCalisan.baslangic_saati + ':00',
       bitis_saati: this.yeniCalisan.bitis_saati + ':00',
       isletme_id: this.isletmeId
@@ -147,7 +155,7 @@ export class IsletmePanelComponent implements OnInit {
         console.log('Çalışan eklendi:', response);
         this.calisanlariYukle();
         this.calisanFormAcik = false;
-        this.yeniCalisan = { ad: '', soyad: '', baslangic_saati: '09:00', bitis_saati: '18:00' };
+        this.yeniCalisan = { ad: '', soyad: '', parola: '', baslangic_saati: '09:00', bitis_saati: '18:00' };
       },
       error: (err) => console.error('Çalışan eklenemedi:', err)
     });
@@ -180,6 +188,7 @@ export class IsletmePanelComponent implements OnInit {
     this.calisanDuzenlemeVerisi = {
       ad: calisan.ad,
       soyad: calisan.soyad,
+      parola: '',
       baslangic_saati: calisan.baslangic_saati?.substring(0, 5) || '09:00',
       bitis_saati: calisan.bitis_saati?.substring(0, 5) || '18:00'
     };
@@ -190,7 +199,7 @@ export class IsletmePanelComponent implements OnInit {
   calisanDuzenlemeIptal(): void {
     this.calisanDuzenlemeModu = false;
     this.duzenlenenCalisan = null;
-    this.calisanDuzenlemeVerisi = { ad: '', soyad: '', baslangic_saati: '', bitis_saati: '' };
+    this.calisanDuzenlemeVerisi = { ad: '', soyad: '', parola: '', baslangic_saati: '', bitis_saati: '' };
   }
 
   calisanGuncelle(): void {
@@ -202,12 +211,17 @@ export class IsletmePanelComponent implements OnInit {
       return;
     }
 
-    const guncelVeri = {
+    const guncelVeri: any = {
       ad: this.calisanDuzenlemeVerisi.ad,
       soyad: this.calisanDuzenlemeVerisi.soyad,
       baslangic_saati: this.calisanDuzenlemeVerisi.baslangic_saati + ':00',
       bitis_saati: this.calisanDuzenlemeVerisi.bitis_saati + ':00'
     };
+
+    // Parola dolduysa gönder
+    if (this.calisanDuzenlemeVerisi.parola) {
+      guncelVeri.parola = this.calisanDuzenlemeVerisi.parola;
+    }
 
     this.isletmeService.calisanGuncelle(this.isletmeId, calisanId, guncelVeri).subscribe({
       next: () => {

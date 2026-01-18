@@ -1,0 +1,115 @@
+<div class="panel-container">
+  <div class="panel-header">
+    <h1>Çalışan Paneli</h1>
+    <div class="header-actions">
+      <button class="btn-theme-toggle" (click)="toggleDarkMode()" [title]="isDarkMode ? 'Aydınlık Mod' : 'Karanlık Mod'">
+        {{ isDarkMode ? '☀️' : '🌙' }}
+      </button>
+      <button class="logout-btn" (click)="logout()">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <!-- Profil Bilgisi -->
+  <div class="profil-card">
+    <div class="profil-info">
+      <h2>👤 {{ calisanAdi }}</h2>
+      <p class="email">{{ calisanEmail }}</p>
+    </div>
+  </div>
+
+  <!-- Randevular Sekmesi -->
+  <div class="tab-content">
+    <div class="section-header">
+      <h2>Randevularım</h2>
+    </div>
+
+    <!-- Filtreler -->
+    <div class="filters">
+      <select [(ngModel)]="seciliDurum" (change)="randevulariYukle()">
+        <option value="">Tüm Durumlar</option>
+        <option value="beklemede">Beklemede</option>
+        <option value="onaylandi">Onaylandı</option>
+        <option value="iptal">İptal Edildi</option>
+      </select>
+      <input type="date" [(ngModel)]="seciliTarih" (change)="randevulariYukle()">
+      <button class="refresh-btn" (click)="randevulariYukle()">Yenile</button>
+    </div>
+
+    <!-- Randevu Listesi -->
+    <div class="list-container">
+      <div class="randevu-item" *ngFor="let randevu of randevular"
+           [class.beklemede]="randevu.durum === 'beklemede' && !randevuGecmisMi(randevu)"
+           [class.onaylandi]="randevu.durum === 'onaylandi' && !randevuGecmisMi(randevu)"
+           [class.iptal]="randevu.durum === 'iptal'"
+           [class.gecmis]="randevuGecmisMi(randevu)">
+        <div class="randevu-info">
+          <div class="randevu-main">
+            <span class="musteri-adi">👤 {{ randevu.alan_kisi || 'Belirtilmemiş' }}</span>
+            <span class="durum-badge gecmis" *ngIf="randevuGecmisMi(randevu)">⏰ Geçmiş</span>
+            <span class="durum-badge" *ngIf="!randevuGecmisMi(randevu)" [class.beklemede]="randevu.durum === 'beklemede'" [class.onaylandi]="randevu.durum === 'onaylandi'" [class.iptal]="randevu.durum === 'iptal'">{{ randevu.durum }}</span>
+          </div>
+          <div class="randevu-details">
+            <span class="randevu-tarih">📅 {{ formatRandevuTarih(randevu) }}</span>
+            <span class="randevu-telefon">📞 {{ randevu.telefon }}</span>
+            <span class="randevu-islem" *ngIf="randevu.yapilacak_islem">✂️ {{ randevu.yapilacak_islem }}</span>
+          </div>
+        </div>
+        <div class="randevu-actions-right">
+          <button class="detail-btn" (click)="randevuDetayGoster(randevu)">📋 Detay</button>
+        </div>
+      </div>
+      <p *ngIf="randevular.length === 0" class="empty-message">Randevu bulunamadı.</p>
+    </div>
+  </div>
+
+  <!-- Randevu Detay Modal -->
+  <div class="modal-overlay" *ngIf="detayModalAcik" (click)="detayModalKapat()">
+    <div class="modal-content randevu-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Randevu Detayı</h3>
+        <button class="close-btn" (click)="detayModalKapat()">✕</button>
+      </div>
+      <div class="modal-body" *ngIf="seciliRandevu">
+        <div class="detay-item">
+          <span class="detay-label">Müşteri:</span>
+          <span class="detay-value">{{ seciliRandevu.alan_kisi || 'Belirtilmemiş' }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Telefon:</span>
+          <span class="detay-value">📞 {{ seciliRandevu.telefon }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Tarih & Saat:</span>
+          <span class="detay-value">{{ formatRandevuTarih(seciliRandevu) }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Yapılacak İşlem:</span>
+          <span class="detay-value">{{ seciliRandevu.yapilacak_islem || 'Belirtilmemiş' }}</span>
+        </div>
+        <div class="detay-item">
+          <span class="detay-label">Durum:</span>
+          <span class="detay-value durum-badge"
+                [class.beklemede]="seciliRandevu.durum === 'beklemede'"
+                [class.onaylandi]="seciliRandevu.durum === 'onaylandi'"
+                [class.iptal]="seciliRandevu.durum === 'iptal'">{{ seciliRandevu.durum }}</span>
+        </div>
+      </div>
+      <div class="modal-actions" *ngIf="seciliRandevu">
+        <ng-container *ngIf="seciliRandevu.durum === 'beklemede'">
+          <button class="approve-btn" (click)="randevuOnayla(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">✓ Onayla</button>
+          <button class="reject-btn" (click)="randevuIptal(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">✕ İptal</button>
+        </ng-container>
+        <ng-container *ngIf="seciliRandevu.durum === 'iptal'">
+          <button class="approve-btn" (click)="randevuOnayla(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">✓ Onayla</button>
+          <button class="pending-btn" (click)="randevuBeklemedeYap(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">⏳ Beklemeye Al</button>
+          <button class="delete-btn" (click)="randevuSil(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">🗑 Sil</button>
+        </ng-container>
+        <ng-container *ngIf="seciliRandevu.durum === 'onaylandi'">
+          <button class="pending-btn" (click)="randevuBeklemedeYap(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">⏳ Beklemeye Al</button>
+          <button class="reject-btn" (click)="randevuIptal(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">✕ İptal</button>
+          <button class="delete-btn" (click)="randevuSil(seciliRandevu.id || seciliRandevu.randevu_id); detayModalKapat()">🗑 Sil</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

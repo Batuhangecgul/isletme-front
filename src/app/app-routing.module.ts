@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AnasayfaComponent } from './anasayfa/anasayfa.component';
 import { LoginComponent } from './login/login.component';
 import { IsletmePanelComponent } from './isletme-panel/isletme-panel.component';
+import { CalisanPanelComponent } from './calisan-panel/calisan-panel.component';
 import { RandevuComponent } from './anasayfa/randevu/randevu.component';
 import { RandevuSorgulamaComponent } from './anasayfa/randevu-sorgulama/randevu-sorgulama/randevu-sorgulama.component';
 
@@ -10,8 +11,9 @@ const routes: Routes = [
   { path: '', component: AnasayfaComponent },
   { path: 'login', component: LoginComponent },
   { path: 'isletme-panel/:id', component: IsletmePanelComponent },
+  { path: 'calisan-panel', component: CalisanPanelComponent },
   { path: 'randevu/:id', component: RandevuComponent },
-    { path: 'randevu-sorgula', component: RandevuSorgulamaComponent }
+  { path: 'randevu-sorgula', component: RandevuSorgulamaComponent }
 ];
 
 @NgModule({
