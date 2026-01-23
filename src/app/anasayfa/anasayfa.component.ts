@@ -142,7 +142,7 @@ getFotoUrl(isletme: any): string {
   if (isletme.fotograf_url) {
     return isletme.fotograf_url;
   }
-  return 'assets/default-isletme.jpg';
+  return 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop';
 }
 
   toggleSlogan(): void {
