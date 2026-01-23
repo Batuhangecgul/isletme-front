@@ -85,7 +85,6 @@ export class AnasayfaComponent implements OnInit {
           // Object ise array'e çevir
           this.isletmeler = Object.values(data);
         }
-        console.log('İşletmeler:', this.isletmeler);
         this.filtrelenmisIsletmeler = this.isletmeler;
         this.hesaplaSayfaSayisi();
         this.yukleniyor = false;

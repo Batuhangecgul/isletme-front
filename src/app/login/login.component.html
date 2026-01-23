@@ -72,7 +72,7 @@
             </div>
             
             <div class="input-group floating-label" [class.has-value]="signupPhone" [class.invalid]="validation.signupPhone.touched && !validation.signupPhone.valid" [class.valid]="validation.signupPhone.touched && validation.signupPhone.valid && signupPhone">
-              <input type="tel" [(ngModel)]="signupPhone" name="signupPhone" (blur)="validateField('signupPhone')" (input)="validateField('signupPhone')" id="signupPhone">
+              <input type="tel" [(ngModel)]="signupPhone" name="signupPhone" (blur)="validateField('signupPhone')" (input)="onPhoneInput('signupPhone', $event)" (keypress)="onlyNumbers($event)" id="signupPhone" placeholder="5xxxxxxxxxx">
               <label for="signupPhone">Telefon</label>
               <span class="validation-icon" *ngIf="validation.signupPhone.touched && signupPhone">
                 <span *ngIf="validation.signupPhone.valid">✓</span>
@@ -138,7 +138,7 @@
           
           <form (ngSubmit)="onLogin()">
             <div class="input-group floating-label" [class.has-value]="loginTelefon" [class.invalid]="validation.loginTelefon.touched && !validation.loginTelefon.valid" [class.valid]="validation.loginTelefon.touched && validation.loginTelefon.valid">
-              <input type="tel" [(ngModel)]="loginTelefon" name="loginTelefon" (blur)="validateField('loginTelefon')" (input)="validateField('loginTelefon')" id="loginTelefon">
+              <input type="tel" [(ngModel)]="loginTelefon" name="loginTelefon" (blur)="validateField('loginTelefon')" (input)="onPhoneInput('loginTelefon', $event)" (keypress)="onlyNumbers($event)" id="loginTelefon" placeholder="5xxxxxxxxxx">
               <label for="loginTelefon">Telefon</label>
               <span class="validation-icon" *ngIf="validation.loginTelefon.touched">
                 <span *ngIf="validation.loginTelefon.valid">✓</span>

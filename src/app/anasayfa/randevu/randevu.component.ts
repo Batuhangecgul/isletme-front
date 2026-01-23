@@ -75,8 +75,6 @@ export class RandevuComponent implements OnInit {
     this.isletmeService.getIsletme(this.isletmeId).subscribe({
       next: (data: any) => {
         this.isletme = data.isletme || data.data || data;
-        console.log('İşletme:', this.isletme);
-        console.log('zaman_artisi:', this.isletme?.zaman_artisi);
       },
       error: (err) => console.error('İşletme yüklenemedi:', err)
     });
@@ -85,7 +83,6 @@ export class RandevuComponent implements OnInit {
     this.isletmeService.getCalisanlar(this.isletmeId).subscribe({
       next: (data: any) => {
         this.calisanlar = Array.isArray(data) ? data : (data.data || data.calisanlar || []);
-        console.log('Çalışanlar:', this.calisanlar);
         this.yukleniyor = false;
       },
       error: (err) => {
@@ -120,8 +117,7 @@ export class RandevuComponent implements OnInit {
     // İşletmenin zaman_artisi değerini kullan, yoksa varsayılan 30 dakika
     const slotSuresi = this.isletme?.zaman_artisi || 30;
 
-    console.log('İşletme zaman_artisi:', this.isletme?.zaman_artisi);
-    console.log('Kullanılan slot süresi:', slotSuresi);
+
 
     const tumSlotlar: string[] = [];
     const bugunStr = this.bugun; // "YYYY-MM-DD" formatında
@@ -140,35 +136,28 @@ export class RandevuComponent implements OnInit {
     // Randevuları API'den al
     // Çalışan ID'sini doğru şekilde al (id veya calisan_id olabilir)
     const calisanId = this.seciliCalisan.id || (this.seciliCalisan as any).calisan_id;
-    console.log('API çağrısı yapılıyor - calisan_id:', calisanId, 'tarih:', this.seciliTarih);
-    console.log('Seçili çalışan objesi:', this.seciliCalisan);
+
 
     this.isletmeService.getDoluSlotlar(calisanId, this.seciliTarih).subscribe({
       next: (data: any) => {
-        console.log('API ham yanıt:', data);
         const randevular = Array.isArray(data) ? data : (data.data || data.randevular || []);
-        console.log('Randevular:', randevular);
 
         // Randevu map'i oluştur (saat -> durum)
         const randevuMap: { [key: string]: string } = {};
         randevular.forEach((r: any) => {
-          console.log('Randevu detay:', r);
           // baslangic_zamani varsa ondan saati al, yoksa saat alanını kullan
           let saat = '';
           if (r.baslangic_zamani) {
             // "2025-11-30 09:00:00" formatından saati al
             const timePart = r.baslangic_zamani.split(' ')[1];
             saat = timePart ? timePart.substring(0, 5) : '';
-            console.log('baslangic_zamani\'dan saat:', saat);
           } else if (r.saat) {
             saat = r.saat.substring(0, 5);
-            console.log('saat alanından:', saat);
           }
           if (saat && r.durum) {
             randevuMap[saat] = r.durum;
           }
         });
-        console.log('Randevu map:', randevuMap);
 
         // Slotları oluştur
         this.slotlar = tumSlotlar.map(saat => {
@@ -235,9 +224,6 @@ export class RandevuComponent implements OnInit {
     // Çalışan ID'sini al (id veya calisan_id olabilir)
     const calisanId = this.seciliCalisan.id || (this.seciliCalisan as any).calisan_id;
 
-    console.log('Seçili Çalışan:', this.seciliCalisan);
-    console.log('Çalışan ID:', calisanId);
-
     // Başlangıç ve bitiş zamanlarını oluştur (datetime formatı: "2025-11-30 09:00:00")
     const baslangicZamani = `${this.seciliTarih} ${this.seciliSaat}:00`;
 
@@ -258,11 +244,8 @@ export class RandevuComponent implements OnInit {
       yapilacak_islem: this.yapilacakIslem
     };
 
-    console.log('Randevu verileri:', randevuData);
-
     this.isletmeService.randevuAl(randevuData).subscribe({
       next: (response) => {
-        console.log('Randevu oluşturuldu:', response);
         this.randevuYukleniyor = false;
         this.randevuBasarili = true;
         // 3 saniye sonra anasayfaya yönlendir

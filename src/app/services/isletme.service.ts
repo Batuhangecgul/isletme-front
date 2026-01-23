@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -76,7 +76,10 @@ export class IsletmeService {
 
   // 3. Dolu slotları getir
   getDoluSlotlar(calisanId: number, tarih: string): Observable<Randevu[]> {
-    return this.http.get<Randevu[]>(`${this.apiUrl}/randevular?calisan_id=${calisanId}&tarih=${tarih}`, { headers: this.headers });
+    let params = new HttpParams();
+    params = params.set('calisan_id', calisanId.toString());
+    params = params.set('tarih', tarih);
+    return this.http.get<Randevu[]>(`${this.apiUrl}/randevular`, { headers: this.headers, params });
   }
 
   // 4. Randevu al (durum: false)
@@ -111,7 +114,9 @@ export class IsletmeService {
 
   // Çalışanları listele (işletmeye göre)
   getCalisanlar(isletmeId: number): Observable<Calisan[]> {
-    return this.http.get<Calisan[]>(`${this.apiUrl}/calisanlar?isletme_id=${isletmeId}`, { headers: this.headers });
+    let params = new HttpParams();
+    params = params.set('isletme_id', isletmeId.toString());
+    return this.http.get<Calisan[]>(`${this.apiUrl}/calisanlar`, { headers: this.headers, params });
   }
 
   // Çalışan sil
@@ -126,10 +131,11 @@ export class IsletmeService {
 
   // Randevuları listele (işletmeye göre, filtreli)
   getRandevular(isletmeId: number, durum?: string, tarih?: string): Observable<Randevu[]> {
-    let url = `${this.apiUrl}/randevular?isletme_id=${isletmeId}`;
-    if (durum) url += `&durum=${durum}`;
-    if (tarih) url += `&tarih=${tarih}`;
-    return this.http.get<Randevu[]>(url, { headers: this.headers });
+    let params = new HttpParams();
+    params = params.set('isletme_id', isletmeId.toString());
+    if (durum) params = params.set('durum', durum);
+    if (tarih) params = params.set('tarih', tarih);
+    return this.http.get<Randevu[]>(`${this.apiUrl}/randevular`, { headers: this.headers, params });
   }
 
   // Randevu durumunu güncelle

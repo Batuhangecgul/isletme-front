@@ -98,6 +98,32 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // Sadece rakam giriş engelleme
+  onlyNumbers(event: KeyboardEvent): void {
+    const char = String.fromCharCode(event.which);
+    if (!/[0-9]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+  onPhoneInput(field: string, event: any): void {
+    const input = event.target.value;
+    let cleaned = input.replace(/\D/g, ''); 
+    if (cleaned.startsWith('0')) {
+      cleaned = cleaned.substring(1);
+    }
+    if (cleaned.length > 10) {
+      cleaned = cleaned.substring(0, 10);
+    }
+
+    if (field === 'signupPhone') {
+      this.signupPhone = cleaned;
+    } else if (field === 'loginTelefon') {
+      this.loginTelefon = cleaned;
+    }
+
+    this.validateField(field);
+  }
+
   // Şifre göster/gizle toggle
   togglePasswordVisibility(field: 'login' | 'signup'): void {
     if (field === 'login') {
@@ -154,7 +180,11 @@ export class LoginComponent implements OnInit {
         break;
       case 'loginTelefon':
         this.validation.loginTelefon.touched = true;
-        this.validation.loginTelefon.valid = this.loginTelefon.trim().length > 0;
+        this.validation.loginTelefon.valid = this.loginTelefon.length === 10 && /^5\d{9}$/.test(this.loginTelefon);
+        break;
+      case 'signupPhone':
+        this.validation.signupPhone.touched = true;
+        this.validation.signupPhone.valid = this.signupPhone.length === 10 && /^5\d{9}$/.test(this.signupPhone);
         break;
       case 'loginPassword':
         this.validation.loginPassword.touched = true;
@@ -163,10 +193,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // Türkiye telefon formatı doğrulama (05xxxxxxxxx veya 5xxxxxxxxx)
+  // Türkiye telefon formatı doğrulama (5xxxxxxxxx - 10 haneli)
   private validatePhone(phone: string): boolean {
     const cleaned = phone.replace(/\D/g, ''); // Tüm sayı-olmayan karakterleri sil
-    const phoneRegex = /^(0)?5\d{9}$/; // 05xxxxxxxxx veya 5xxxxxxxxx
+    const phoneRegex = /^5\d{9}$/; // 5xxxxxxxxx (10 haneli)
     return phoneRegex.test(cleaned);
   }
 
@@ -177,7 +207,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     if (!this.validatePhone(this.loginTelefon)) {
-      this.loginPhoneError = 'Geçerli bir Türkiye telefon numarası girin (05xxxxxxxxx)';
+      this.loginPhoneError = 'Geçerli bir Türkiye telefon numarası girin (5xxxxxxxxxx)';
       return;
     }
 
@@ -187,7 +217,6 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginTelefon, this.loginPassword).subscribe({
       next: (response: any) => {
         this.loading = false;
-        console.log('Giriş başarılı - Full response:', response);
 
         let isletmeId = null;
 
@@ -201,15 +230,11 @@ export class LoginComponent implements OnInit {
           isletmeId = response.id;
         }
 
-        console.log('Bulunan İşletme ID:', isletmeId);
-
         this.router.navigate(['/isletme-panel', isletmeId || 1]);
       },
       error: (err) => {
         this.loading = false;
         this.loginError = err.error?.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
-        console.error('Login hatası:', err);
-        console.error('Error body:', err.error);
       }
     });
   }
@@ -253,7 +278,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     if (!this.validatePhone(this.signupPhone)) {
-      this.signupPhoneError = 'Geçerli bir Türkiye telefon numarası girin (05xxxxxxxxx)';
+      this.signupPhoneError = 'Geçerli bir Türkiye telefon numarası girin (5xxxxxxxxxx)';
       return;
     }
 
@@ -278,7 +303,6 @@ export class LoginComponent implements OnInit {
     this.authService.signup(signupData).subscribe({
       next: (response) => {
         this.loading = false;
-        console.log('Kayıt başarılı:', response);
         this.isLoginMode = true;
         this.signupError = '';
         this.loginSuccess = 'Kayıt başarılı! Şimdi giriş yapabilirsiniz.';

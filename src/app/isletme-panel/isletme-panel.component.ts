@@ -73,7 +73,6 @@ export class IsletmePanelComponent implements OnInit {
     this.checkDarkMode();
     this.route.params.subscribe(params => {
       this.isletmeId = +params['id'];
-      console.log('İşletme ID:', this.isletmeId);
       this.verileriYukle();
     });
 
@@ -113,24 +112,16 @@ export class IsletmePanelComponent implements OnInit {
 
   calisanlariYukle(): void {
     if (!this.isletmeId) return;
-    console.log('Çalışanları yüklüyorum, isletmeId:', this.isletmeId);
     this.isletmeService.getCalisanlar(this.isletmeId).subscribe({
       next: (data: any) => {
-        console.log('API ham yanıt:', data);
         this.calisanlar = Array.isArray(data) ? data : (data.data || data.calisanlar || []);
-        console.log('Çalışanlar:', this.calisanlar);
       },
       error: (err) => console.error('Çalışanlar yüklenemedi:', err)
     });
   }
 
   calisanEkle(): void {
-    console.log('calisanEkle çağrıldı');
-    console.log('isletmeId:', this.isletmeId);
-    console.log('yeniCalisan:', this.yeniCalisan);
-
     if (!this.isletmeId || !this.yeniCalisan.ad || !this.yeniCalisan.parola) {
-      console.log('Eksik alan var, return ediliyor');
       alert('Lütfen ad ve parola alanlarını doldurun');
       return;
     }
@@ -148,11 +139,8 @@ export class IsletmePanelComponent implements OnInit {
       isletme_id: this.isletmeId
     };
 
-    console.log('Gönderilecek veri:', calisan);
-
     this.isletmeService.calisanEkle(calisan).subscribe({
       next: (response) => {
-        console.log('Çalışan eklendi:', response);
         this.calisanlariYukle();
         this.calisanFormAcik = false;
         this.yeniCalisan = { ad: '', soyad: '', parola: '', baslangic_saati: '09:00', bitis_saati: '18:00' };
@@ -166,7 +154,6 @@ export class IsletmePanelComponent implements OnInit {
 
     const calisanId = calisan.id || (calisan as any).calisan_id;
     if (!calisanId) {
-      console.error('Çalışan ID bulunamadı');
       return;
     }
 
@@ -176,7 +163,6 @@ export class IsletmePanelComponent implements OnInit {
 
     this.isletmeService.calisanSil(this.isletmeId, calisanId).subscribe({
       next: () => {
-        console.log('Çalışan silindi');
         this.calisanlariYukle();
       },
       error: (err) => console.error('Çalışan silinemedi:', err)
@@ -207,7 +193,6 @@ export class IsletmePanelComponent implements OnInit {
 
     const calisanId = this.duzenlenenCalisan.id || (this.duzenlenenCalisan as any).calisan_id;
     if (!calisanId) {
-      console.error('Çalışan ID bulunamadı');
       return;
     }
 
@@ -225,7 +210,6 @@ export class IsletmePanelComponent implements OnInit {
 
     this.isletmeService.calisanGuncelle(this.isletmeId, calisanId, guncelVeri).subscribe({
       next: () => {
-        console.log('Çalışan güncellendi');
         this.calisanlariYukle();
         this.calisanDuzenlemeIptal();
       },
@@ -237,12 +221,9 @@ export class IsletmePanelComponent implements OnInit {
 
   randevulariYukle(): void {
     if (!this.isletmeId) return;
-    console.log('Randevular yükleniyor, isletme_id:', this.isletmeId);
     this.isletmeService.getRandevular(this.isletmeId, this.seciliDurum, this.seciliTarih).subscribe({
       next: (data: any) => {
-        console.log('API ham yanıt (randevular):', data);
         this.randevular = Array.isArray(data) ? data : (data.data || data.randevular || []);
-        console.log('Randevular:', this.randevular);
       },
       error: (err) => console.error('Randevular yüklenemedi:', err)
     });
@@ -250,13 +231,10 @@ export class IsletmePanelComponent implements OnInit {
 
   randevuOnayla(randevuId: number | undefined): void {
     if (!randevuId) {
-      console.error('Randevu ID bulunamadı');
       return;
     }
-    console.log('Onaylanacak randevu ID:', randevuId);
     this.isletmeService.randevuGuncelle(randevuId, 'onaylandi').subscribe({
       next: () => {
-        console.log('Randevu onaylandı');
         this.randevulariYukle();
       },
       error: (err) => console.error('Randevu onaylanamadı:', err)
@@ -265,13 +243,10 @@ export class IsletmePanelComponent implements OnInit {
 
   randevuIptal(randevuId: number | undefined): void {
     if (!randevuId) {
-      console.error('Randevu ID bulunamadı');
       return;
     }
-    console.log('İptal edilecek randevu ID:', randevuId);
     this.isletmeService.randevuGuncelle(randevuId, 'iptal').subscribe({
       next: () => {
-        console.log('Randevu iptal edildi');
         this.randevulariYukle();
       },
       error: (err) => console.error('Randevu iptal edilemedi:', err)
@@ -280,13 +255,10 @@ export class IsletmePanelComponent implements OnInit {
 
   randevuBeklemedeYap(randevuId: number | undefined): void {
     if (!randevuId) {
-      console.error('Randevu ID bulunamadı');
       return;
     }
-    console.log('Beklemeye alınacak randevu ID:', randevuId);
     this.isletmeService.randevuGuncelle(randevuId, 'beklemede').subscribe({
       next: () => {
-        console.log('Randevu beklemeye alındı');
         this.randevulariYukle();
       },
       error: (err) => console.error('Randevu beklemeye alınamadı:', err)
@@ -295,12 +267,10 @@ export class IsletmePanelComponent implements OnInit {
 
   randevuSil(randevuId: number | undefined): void {
     if (!randevuId) {
-      console.error('Randevu ID bulunamadı');
       return;
     }
     this.isletmeService.randevuSil(randevuId).subscribe({
       next: () => {
-        console.log('Randevu silindi');
         this.randevulariYukle();
       },
       error: (err) => console.error('Randevu silinemedi:', err)
@@ -399,7 +369,6 @@ export class IsletmePanelComponent implements OnInit {
 
     this.authService.isletmeGuncelle(guncellenecek).subscribe({
       next: (response) => {
-        console.log('İşletme güncellendi:', response);
         this.isletme = this.authService.getCurrentIsletme();
         this.duzenlemeModu = false;
         alert('Bilgiler başarıyla güncellendi!');
@@ -440,13 +409,8 @@ export class IsletmePanelComponent implements OnInit {
 
     this.authService.fotografGuncelle(this.selectedFile).subscribe({
       next: (response) => {
-        console.log('Fotoğraf API Response:', response);
-        console.log('Response isletme:', response?.isletme);
-        console.log('Response fotograf:', response?.isletme?.fotograf);
-
         // localStorage'dan güncel veriyi al
         this.isletme = this.authService.getCurrentIsletme();
-        console.log('Güncel isletme:', this.isletme);
 
         this.selectedFile = null;
         this.fotografYukleniyor = false;
@@ -488,7 +452,6 @@ export class IsletmePanelComponent implements OnInit {
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
-        console.log('Çıkış başarılı');
         this.router.navigate(['/login']);
       },
       error: (err) => {

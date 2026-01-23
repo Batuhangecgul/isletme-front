@@ -71,7 +71,6 @@ export class CalisanPanelComponent implements OnInit {
       this.calisanAdi = `${calisan.ad} ${calisan.soyad}`;
       this.calisanEmail = calisan.email;
     } catch (err) {
-      console.error('Çalışan verisi parse edilemedi:', err);
       this.logout();
     }
   }
@@ -94,7 +93,6 @@ export class CalisanPanelComponent implements OnInit {
             const rCalId = r.calisan_id || (r.calisan as any)?.calisan_id || (r.calisan as any)?.id;
             return rCalId === calisanId;
           });
-          console.log('Çalışanın randevuları:', this.randevular);
         },
         error: (err) => console.error('Randevular yüklenemedi:', err)
       });
@@ -133,7 +131,6 @@ export class CalisanPanelComponent implements OnInit {
     if (!randevuId) return;
     this.isletmeService.randevuGuncelle(randevuId, 'onaylandi').subscribe({
       next: () => {
-        console.log('Randevu onaylandı');
         this.randevulariYukle();
         this.detayModalKapat();
       },
@@ -145,7 +142,6 @@ export class CalisanPanelComponent implements OnInit {
     if (!randevuId) return;
     this.isletmeService.randevuGuncelle(randevuId, 'iptal').subscribe({
       next: () => {
-        console.log('Randevu iptal edildi');
         this.randevulariYukle();
         this.detayModalKapat();
       },
@@ -157,7 +153,6 @@ export class CalisanPanelComponent implements OnInit {
     if (!randevuId) return;
     this.isletmeService.randevuGuncelle(randevuId, 'beklemede').subscribe({
       next: () => {
-        console.log('Randevu beklemeye alındı');
         this.randevulariYukle();
         this.detayModalKapat();
       },
@@ -171,7 +166,6 @@ export class CalisanPanelComponent implements OnInit {
 
     this.isletmeService.randevuSil(randevuId).subscribe({
       next: () => {
-        console.log('Randevu silindi');
         this.randevulariYukle();
         this.detayModalKapat();
       },

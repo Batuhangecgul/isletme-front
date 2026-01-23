@@ -17,7 +17,7 @@
 			<circle cx="11" cy="11" r="8"></circle>
 			<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 		</svg>
-		<input type="text" class="search-input" placeholder="Telefon numaranızı giriniz" [(ngModel)]="aramaMetni" (keyup.enter)="ara()">
+		<input type="text" class="search-input" placeholder="Telefon numaranızı giriniz" [(ngModel)]="aramaMetni" (keyup.enter)="ara()" (keypress)="onlyNumbers($event)" (blur)="validatePhoneNumber()">
 		<button class="search-btn" (click)="ara()">
 			<span>Ara</span>
 			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
