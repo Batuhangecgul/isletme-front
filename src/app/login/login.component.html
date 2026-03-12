@@ -72,7 +72,7 @@
             </div>
             
             <div class="input-group floating-label" [class.has-value]="signupPhone" [class.invalid]="validation.signupPhone.touched && !validation.signupPhone.valid" [class.valid]="validation.signupPhone.touched && validation.signupPhone.valid && signupPhone">
-              <input type="tel" [(ngModel)]="signupPhone" name="signupPhone" (blur)="validateField('signupPhone')" (input)="onPhoneInput('signupPhone', $event)" (keypress)="onlyNumbers($event)" id="signupPhone" placeholder="5xxxxxxxxxx">
+              <input type="tel" [(ngModel)]="signupPhone" name="signupPhone" (blur)="validateField('signupPhone')" (input)="onPhoneInput('signupPhone', $event)" (keypress)="onlyNumbers($event)" id="signupPhone" >
               <label for="signupPhone">Telefon</label>
               <span class="validation-icon" *ngIf="validation.signupPhone.touched && signupPhone">
                 <span *ngIf="validation.signupPhone.valid">✓</span>
